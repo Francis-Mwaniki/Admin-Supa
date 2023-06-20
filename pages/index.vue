@@ -21,7 +21,11 @@ const searching = ref(false);
 //     console.log(data);
 //   });
 // });
+
+/* sort products by title */
+
 /* add to supabase */
+
 const handleUrl = (url) => {
   productData.value.url = url;
   console.log("url", url);
@@ -132,12 +136,12 @@ watch(q, (value) => {
 });
 const toast = useToast();
 const columns = [
-  // { key: "image", label: "Image" },
-  { key: "id", label: "id" },
-  { key: "name", label: "Name" },
-  { key: "price", label: "Price" },
-  { key: "created_at", label: "Date" },
-  { key: "actions", label: "Actions" },
+  // {  sortable: true, key: "image", label: "Image" },
+  { sortable: true, key: "id", label: "id" },
+  { sortable: true, key: "name", label: "Name" },
+  { sortable: true, key: "price", label: "Price" },
+  { sortable: true, key: "created_at", label: "Date" },
+  { sortable: true, key: "actions", label: "Actions" },
 ];
 const page = ref(1);
 const pageCount = 5;
@@ -285,15 +289,24 @@ fetchProducts();
         <span class="">{{ isLoading ? "deleting...." : "Delete Product" }}</span>
         <ClientOnly><Icon name="ic:round-delete-forever" /></ClientOnly>
       </UButton>
-      <UButton label="Add Product." @click="" class="focus:bg-green-400">
-        <span> Sort By title</span>
-        <ClientOnly>
-          <Icon name="ic:round-sort" />
-        </ClientOnly>
-      </UButton>
     </div>
     <div v-if="searching">
-      <UTable v-model="selected" :rows="filteredRows" :columns="columns">
+      <UTable
+        v-model="selected"
+        :rows="filteredRows"
+        :columns="columns"
+        :sort="{ column: 'title' }"
+        sort-asc-icon="i-heroicons-arrow-up-20-solid"
+        sort-desc-icon="i-heroicons-arrow-down-20-solid"
+        :sort-button="{
+          icon: 'i-heroicons-sparkles-20-solid',
+          color: 'primary',
+          variant: 'outline',
+          size: '2xs',
+          square: false,
+          ui: { rounded: 'rounded-full' },
+        }"
+      >
         <template #name-data="{ row }">
           <NuxtImg :src="row.url" class="h-14 w-14 rounded-full" alt="" />
           <span
@@ -336,7 +349,22 @@ fetchProducts();
       </UTable>
     </div>
     <div class="" v-if="!searching">
-      <UTable v-model="selected" :rows="rows" :columns="columns">
+      <UTable
+        v-model="selected"
+        :rows="rows"
+        :columns="columns"
+        :sort="{ column: 'title' }"
+        sort-asc-icon="i-heroicons-arrow-up-20-solid"
+        sort-desc-icon="i-heroicons-arrow-down-20-solid"
+        :sort-button="{
+          icon: 'i-heroicons-sparkles-20-solid',
+          color: 'primary',
+          variant: 'outline',
+          size: '2xs',
+          square: false,
+          ui: { rounded: 'rounded-full' },
+        }"
+      >
         {{ selected }}
         <template #name-data="{ row }">
           <NuxtImg :src="row.url" class="h-14 w-14 rounded-full" alt="" />
