@@ -98,12 +98,13 @@ export default {
         .then((response) => {
           const url = response.data.secure_url;
           this.file_name = response.data.original_filename;
-          console.log("file_name:", this.file_name, "the data:", response.data);
+          // console.log("file_name:", this.file_name, "the data:", response.data);
           const tokens = url.split("/");
           tokens.splice(-2, 0, "w_400,c_scale");
           this.fetchedUrl = tokens.join("/");
-          console.log("Uploaded file to Cloudinary:", url);
-          console.log("Fetched URL:", this.fetchedUrl);
+          // console.log("Uploaded file to Cloudinary:", url);
+          this.$emit("uploaded", this.fetchedUrl);
+          // console.log("Fetched URL:", this.fetchedUrl);
         })
         .catch((error) => {
           console.log("Error uploading file to Cloudinary:", error);

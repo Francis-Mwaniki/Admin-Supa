@@ -3,7 +3,10 @@
     "cSpell.words": [
         "axios",
         "cloudinary",
-        "partytown"
+        "mpesa",
+        "nuxtjs",
+        "partytown",
+        "supabase"
     ],
     "vue.codeActions.enabled": false
 }

@@ -9,6 +9,7 @@ export default defineNuxtConfig({
   '@nuxtjs/cloudinary',
   "@pinia/nuxt",
   // 'nuxt-security',
+  '@nuxtjs/supabase',
   '@nuxt/image',
   "@pinia-plugin-persistedstate/nuxt",
   
@@ -18,7 +19,7 @@ partytown: {
 },
   cloudinary: {
     cloudName: 'dzvtkbjhc',
-    useComponent: true
+  
   },
   image: {
     cloudinary: {
