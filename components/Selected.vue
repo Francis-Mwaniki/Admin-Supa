@@ -2,15 +2,15 @@
   <div class="container mx-auto py-8 bg-gray-950 text-white">
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
       <div
-        v-for="(person, index) in selected"
-        :key="person.id"
+        v-for="(product, index) in selected"
+        :key="product.id"
         class="bg-gray-800 shadow-lg rounded-lg p-6"
       >
         <div class="mb-4">
-          <span class="text-primary-500 dark:text-primary-400">{{ person.name }}</span>
+          <span class="text-primary-500 dark:text-primary-400">{{ product.name }}</span>
         </div>
         <div class="flex justify-end">
-          <UDropdown :items="items(person)">
+          <UDropdown :items="items(product)">
             <UButton
               color="gray"
               variant="ghost"
@@ -18,15 +18,15 @@
             />
           </UDropdown>
           <UButton
-            @click="deletePerson(index)"
+            @click="deleteProduct(index)"
             color="red"
             variant="solid"
             icon="i-heroicons-trash-20-solid"
             class="ml-2"
           />
           <UButton
-            @click="editPerson(index)"
-            color="blue"
+            @click="editProduct(index)"
+            color="green"
             variant="solid"
             icon="i-heroicons-pencil-square-20-solid"
             class="ml-2"
@@ -34,20 +34,20 @@
         </div>
       </div>
     </div>
-    <!-- Add/Edit Person Popup -->
+    <!-- Add/Edit product Popup -->
     <div
       v-if="showPopup"
       class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50"
     >
       <div class="bg-gray-800 rounded-lg p-8">
         <h2 class="text-2xl font-bold mb-4">
-          {{ isLoading ? "Edit Person" : "Add Person" }}
+          {{ isEditing ? "Edit product" : "Add Product" }}
         </h2>
-        <form @submit.prevent="savePerson">
+        <form @submit.prevent="saveProduct">
           <div class="mb-4">
             <label for="name" class="block text-white">Name:</label>
             <input
-              v-model="personData.name"
+              v-model="productData.name"
               type="text"
               id="name"
               class="bg-gray-200 text-black border border-gray-300 rounded px-3 py-2 w-full"
@@ -55,23 +55,25 @@
             />
           </div>
           <div class="mb-4">
-            <label for="age" class="block text-white">Age:</label>
+            <label for="size" class="block text-white">size:</label>
             <input
-              v-model="personData.age"
+              v-model="productData.size"
               type="number"
-              id="age"
+              id="size"
               class="bg-gray-200 text-black border border-gray-300 rounded px-3 py-2 w-full"
               required
             />
           </div>
-          <CloudUpload />
-
           <div class="mb-4 mt-2">
-            <label for="email" class="block text-white">Email:</label>
+            <label for="File" class="block text-white">Select File:</label>
+            <CloudUpload @uploaded="handleUrl" />
+          </div>
+          <div class="mb-4 mt-2">
+            <label for="desc" class="block text-white">desc:</label>
             <input
-              v-model="personData.email"
-              type="email"
-              id="email"
+              v-model="productData.desc"
+              type="desc"
+              id="desc"
               class="bg-gray-200 text-black border border-gray-300 rounded px-3 py-2 w-full"
               required
             />
@@ -87,7 +89,7 @@
             >
               {{ isLoading ? "Save Changes" : "Add" }}
             </UButton>
-            <UButton @click="cancelEdit" color="gray" variant="solid" class="ml-2"
+            <UButton @click="cancelEdit" variant="solid" class="ml-2 bg-green-400"
               >Cancel</UButton
             >
           </div>
@@ -108,7 +110,7 @@ export default {
       type: Array,
       required: true,
     },
-    people: {
+    product: {
       type: Array,
       required: true,
     },
@@ -121,43 +123,28 @@ export default {
     return {
       columns: [
         { key: "name", label: "Name" },
-        { key: "age", label: "Age" },
-        { key: "email", label: "Email" },
+        { key: "size", label: "size" },
+        { key: "desc", label: "desc" },
         { key: "actions", label: "Actions" },
       ],
       isLoading: false,
       showPopup: false,
       selectedFile: null,
       isLoading: false,
+      isEditing: false,
       toast: useToast(),
       isSaving: false,
-      personData: { id: null, name: "", age: "", email: "" },
+      productData: { id: null, url: "", name: "", size: "", desc: "" },
     };
   },
   methods: {
-    handleFileChange(event) {
-      const file = event.target.files[0];
-      if (file) {
-        const allowedTypes = ["image/jpeg", "image/png", "image/gif"];
-        if (allowedTypes.includes(file.type)) {
-          this.selectedFile = file;
-          console.log("Selected file:", file.name);
-        } else {
-          console.log("Invalid file type. Please select an image (JPEG, PNG, GIF).");
-          this.selectedFile = null;
-          // Optionally, you can reset the file input field:
-          event.target.value = "";
-        }
-      }
-    },
-
-    items(person) {
+    items(product) {
       return [
         [
           {
             label: "Edit",
             icon: "i-heroicons-pencil-square-20-solid",
-            click: () => this.editPerson(person.id),
+            click: () => this.editProduct(product.id),
           },
           {
             label: "Duplicate",
@@ -178,97 +165,51 @@ export default {
           {
             label: "Delete",
             icon: "i-heroicons-trash-20-solid",
-            click: () => this.deletePerson(person.id),
+            click: () => this.deleteProduct(product.id),
           },
         ],
       ];
     },
-    deletePerson(index) {
+    deleteProduct(index) {
       this.selected.splice(index, 1);
     },
 
-    editPerson(person) {
-      this.isLoading = true;
-      this.personData = { ...person };
-      this.showPopup = true;
+    handleUrl(url) {
+      this.productData.url = url;
+      this.$emit("productUrl", url);
     },
-    // savePerson() {
-    //   this.isSaving = true;
-    //   if (this.isEditing) {
-    //     // Update existing person
-    //     const index = this.people.findIndex((p) => p.id === this.personData.id);
-    //     if (index !== -1) {
-    //       this.people.splice(index, 1, this.personData);
-    //     }
-    //   } else {
-    //     // Add new person
-    //     const newId = this.people.length + 1;
-    //     this.personData.id = newId;
-    //     this.people.push(this.personData);
-    //   }
-    //   this.cancelEdit();
-    // },
-    async savePerson() {
-      // Cloudinary configuration
-      const cloudinaryCloudName = "dzvtkbjhc";
-      const cloudinaryUploadPreset = "ml_default";
-
-      const cloudinaryUrl = "https://api.cloudinary.com/v1_1/dzvtkbjhc/";
-      // `https://res.cloudinary.com/${cloudinaryCloudName}/image/upload/v1684651576/`;
-
-      // `https://res.cloudinary.com/${cloudinaryCloudName}/image/upload/v1684651576/`
-
-      this.isSaving = true;
-
-      // Upload the file to Cloudinary
-      let imageURL = null;
-      if (this.selectedFile) {
-        const formData = new FormData();
-        formData.append("file", this.selectedFile);
-        formData.append("upload_preset", cloudinaryUploadPreset);
-
-        try {
-          const response = await axios.post(cloudinaryUrl, formData, {
-            headers: {
-              "Content-Type": "multipart/form-data",
-            },
-          });
-
-          imageURL = response.data.secure_url;
-          console.log("File uploaded to Cloudinary. URL:", imageURL);
-        } catch (error) {
-          console.error("Error uploading file to Cloudinary:", error.message);
-        }
-      }
-
-      // Prepare the person data
-      const person = {
-        id: this.personData.id,
-        name: this.personData.name,
-        age: this.personData.age,
-        email: this.personData.email,
-        image: imageURL,
+    editProduct(product) {
+      this.isLoading = true;
+      this.productData = {
+        id: product.id,
+        name: product.name,
+        size: product.size,
+        desc: product.desc,
       };
 
+      this.showPopup = true;
+    },
+    saveProduct() {
+      this.isSaving = true;
+      console.log("this.productData", this.productData);
       if (this.isEditing) {
-        // Update existing person
-        const index = this.people.findIndex((p) => p.id === this.personData.id);
+        // Update existing product
+        const index = this.product.findIndex((p) => p.id === this.productData.id);
         if (index !== -1) {
-          this.people.splice(index, 1, person);
+          this.product.splice(index, 1, this.productData);
         }
       } else {
-        // Add new person
-        const newId = this.people.length + 1;
-        person.id = newId;
-        this.people.push(person);
+        // Add new product
+        const newId = this.product.length + 1;
+        this.productData.id = newId;
+        this.product.push(this.productData);
       }
-
-      this.cancelEdit();
     },
+
     cancelEdit() {
       this.showPopup = false;
       this.isLoading = false;
-      this.personData = { id: null, name: "", age: "", email: "" };
+      this.productData = { id: null, name: "", size: "", desc: "" };
       this.isSaving = false;
     },
   },
