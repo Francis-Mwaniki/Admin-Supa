@@ -1,4 +1,5 @@
 <script setup>
+import Admin from "@/components/Admin.vue";
 import { useFetch } from "nuxt/app";
 import { ref, computed, onMounted } from "vue";
 const client = useSupabaseClient();
@@ -81,26 +82,46 @@ const deleteSelectedProducts = async () => {
     });
     return;
   }
-
-  isLoading.value = true;
-  console.log("selected", selected.value[0].id);
-  const { data, error } = await client
-    .from("Products")
-    .delete()
-    .eq("id", selected.value[0].id);
-  if (error) {
-    isLoading.value = false;
-    console.log(error);
-  } else {
-    isLoading.value = false;
+  if (selected.value.length === 0) {
     toast.add({
-      title: "Products Deleted",
-      description: "Products Deleted Successfully",
-      status: "success",
+      title: "Error",
+      description: "Please select a product",
+      status: "error",
       duration: 5000,
       isClosable: true,
     });
-    await fetchProducts();
+    return;
+  }
+
+  isLoading.value = true;
+  console.log("selected", selected.value[0].id);
+  try {
+    const { data, error } = await client
+      .from("Products")
+      .delete()
+      .eq("id", selected.value[0].id);
+    if (error) {
+      isLoading.value = false;
+      console.log(error);
+    } else {
+      isLoading.value = false;
+      toast.add({
+        title: "Products Deleted",
+        description: "Products Deleted Successfully",
+        status: "success",
+        duration: 5000,
+        isClosable: true,
+      });
+      await fetchProducts();
+    }
+  } catch (error) {
+    toast.add({
+      title: "Error",
+      description: "Error Deleting Product",
+      status: "error",
+      duration: 5000,
+      isClosable: true,
+    });
   }
 };
 const filteredRows = computed(() => {
@@ -213,6 +234,7 @@ fetchProducts();
 </script>
 
 <template>
+  <div class="flex justify-end items-end py-2"><Admin /></div>
   <div
     v-if="isAdding"
     class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-40"
@@ -292,6 +314,7 @@ fetchProducts();
     </div>
     <div v-if="searching">
       <UTable
+        class="mt-4 bg-gray-900"
         v-model="selected"
         :rows="filteredRows"
         :columns="columns"
@@ -351,6 +374,7 @@ fetchProducts();
     <div class="" v-if="!searching">
       <UTable
         v-model="selected"
+        class="mt-4 bg-gray-900"
         :rows="rows"
         :columns="columns"
         :sort="{ column: 'title' }"
