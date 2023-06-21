@@ -42,6 +42,7 @@
           class="text-white px-7 justify-self-center"
           @click="$router.push('/Dashboard')"
         >
+          <Icon name="ic:round-arrow-back" class="mr-2" />
           Go Back
         </UButton>
       </div>
@@ -49,40 +50,14 @@
   </div>
 </template>
 
-<script>
-export default {
-  data() {
-    return {
-      profile: {
-        provider: "email",
-        providers: ["email"],
-        aud: "authenticated",
-        confirmation_sent_at: "2023-06-21T06:38:30.416048Z",
-        confirmed_at: "2023-06-21T06:38:49.737004Z",
-        created_at: "2023-06-21T06:38:30.410163Z",
-        email: "francismwaniki630@gmail.com",
-        email_confirmed_at: "2023-06-21T06:38:49.737004Z",
-        id: "4ca483fd-94bc-497e-ad17-867a5aa57810",
-        identities: [
-          /* identities array */
-        ],
-        last_sign_in_at: "2023-06-21T10:23:45.526632Z",
-        phone: "",
-        recovery_sent_at: "2023-06-21T10:22:52.569134Z",
-        role: "authenticated",
-        updated_at: "2023-06-21T10:23:45.52831Z",
-        user_metadata: {}, // Add the user_metadata object here
-      },
-    };
-  },
-  methods: {
-    formatDate(date) {
-      // Implement your date formatting logic here
-      // Example: return new Date(date).toLocaleDateString();
-      return date;
-    },
-  },
-};
+<script setup>
+import moment from "moment";
+const user = useSupabaseUser();
+const profile = computed(() => user.value || {});
+
+function formatDate(date) {
+  return date ? moment(date).format("MMMM Do YYYY, h:mm:ss a") : "Never";
+}
 </script>
 
 <style scoped>
