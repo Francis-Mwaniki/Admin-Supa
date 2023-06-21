@@ -36,7 +36,7 @@ const handleUrl = (url) => {
 };
 const addProductToSupaBase = async () => {
   store.isSaving = true;
-  store.store.isAdding = true;
+  store.isAdding = true;
   console.log("store.productData", store.productData);
   const { data, error } = await client.from("Products").insert([
     {
