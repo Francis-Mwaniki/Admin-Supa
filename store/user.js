@@ -7,7 +7,7 @@ import { defineStore } from "pinia";
     const isAdding = ref(false);
     const isLoading = ref(false);
     const resetting = ref(false);
-    const showModal = ref(true);
+    const showModal = ref(false);
     const isUpdating = ref(false);
     const selected = ref([]);
     const isDeleting = ref(false);

@@ -35,8 +35,47 @@ const handleUrl = (url) => {
   console.log("url", url);
 };
 const addProductToSupaBase = async () => {
+  if (store.productData.url === "") {
+    toast.add({
+      title: "Error",
+      description: "Please upload an image",
+      status: "error",
+      duration: 5000,
+      isClosable: true,
+    });
+    return;
+  }
+  if (store.productData.name === "") {
+    toast.add({
+      title: "Error",
+      description: "Please enter a name",
+      status: "error",
+      duration: 5000,
+      isClosable: true,
+    });
+    return;
+  }
+  if (store.productData.size === "") {
+    toast.add({
+      title: "Error",
+      description: "Please enter a size",
+      status: "error",
+      duration: 5000,
+      isClosable: true,
+    });
+    return;
+  }
+  if (store.productData.desc === "") {
+    toast.add({
+      title: "Error",
+      description: "Please enter a description",
+      status: "error",
+      duration: 5000,
+      isClosable: true,
+    });
+    return;
+  }
   store.isSaving = true;
-
   console.log("store.productData", store.productData);
   const { data, error } = await client.from("Products").insert([
     {
@@ -46,8 +85,16 @@ const addProductToSupaBase = async () => {
       url: store.productData.url,
     },
   ]);
+
   if (error) {
     store.isSaving = false;
+    toast.add({
+      title: "Error",
+      description: "Error adding product",
+      status: "error",
+      duration: 5000,
+      isClosable: true,
+    });
     console.log(error);
   } else {
     store.isSaving = false;
@@ -61,7 +108,10 @@ const addProductToSupaBase = async () => {
     setTimeout(() => {
       store.productData = { id: null, url: "", name: "", size: "", desc: "" };
     }, 2000);
+
     await fetchProducts();
+    store.isSaving = false;
+    store.showModal = false;
   }
 };
 /*    deleteSelectedProducts in supabase 
@@ -104,7 +154,7 @@ const deleteSelectedProducts = async () => {
     const { data, error } = await client
       .from("Products")
       .delete()
-      .eq("id", selected.value[0].id);
+      .eq("id", store.selected[0].id);
     if (error) {
       store.isDeleting = false;
       console.log(error);
@@ -250,7 +300,7 @@ const openModal = () => {
     <div class="" v-if="!store.showResetModal">
       <div class="flex justify-end items-end py-2"><Admin /></div>
       <div
-        v-if="store.isSaving"
+        v-if="store.showModal"
         class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-40"
       >
         <div class="bg-gray-900 bg-opacity-80 z-20 rounded-lg p-8 max-w-2xl w-full">
@@ -305,7 +355,7 @@ const openModal = () => {
               >
                 {{ store.isSaving ? "Save Changes" : "Add" }}
               </UButton>
-              <UButton @click="store.isSaving = false" variant="solid" class="ml-2"
+              <UButton @click="store.showModal = false" variant="solid" class="ml-2"
                 >Cancel</UButton
               >
             </div>
@@ -317,7 +367,7 @@ const openModal = () => {
           <UInput v-model="q" placeholder="Filter products..." />
           <UButton
             label="Add Product."
-            @click="store.isSaving = true"
+            @click="store.showModal = true"
             class="focus:bg-green-400"
           >
             <span>Add Product</span>
