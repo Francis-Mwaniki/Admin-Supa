@@ -36,7 +36,7 @@ const handleUrl = (url) => {
 };
 const addProductToSupaBase = async () => {
   store.isSaving = true;
-  store.isAdding = true;
+
   console.log("store.productData", store.productData);
   const { data, error } = await client.from("Products").insert([
     {
@@ -59,7 +59,6 @@ const addProductToSupaBase = async () => {
       isClosable: true,
     });
     setTimeout(() => {
-      store.isAdding = false;
       store.productData = { id: null, url: "", name: "", size: "", desc: "" };
     }, 2000);
     await fetchProducts();
@@ -251,12 +250,12 @@ const openModal = () => {
     <div class="" v-if="!store.showResetModal">
       <div class="flex justify-end items-end py-2"><Admin /></div>
       <div
-        v-if="store.isAdding"
+        v-if="store.isSaving"
         class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-40"
       >
         <div class="bg-gray-900 bg-opacity-80 z-20 rounded-lg p-8 max-w-2xl w-full">
           <h2 class="text-2xl font-bold mb-4">
-            {{ isEditing ? "Edit product" : "Add Product" }}
+            {{ store.isSaving ? "Edit product" : "Add Product" }}
           </h2>
           <form @submit.prevent="addProductToSupaBase">
             <div class="mb-4">
@@ -304,9 +303,9 @@ const openModal = () => {
                 :disabled="store.isSaving"
                 :loading="store.isSaving"
               >
-                {{ store.isAdding ? "Save Changes" : "Add" }}
+                {{ store.isSaving ? "Save Changes" : "Add" }}
               </UButton>
-              <UButton @click="store.isAdding = false" variant="solid" class="ml-2"
+              <UButton @click="store.isSaving = false" variant="solid" class="ml-2"
                 >Cancel</UButton
               >
             </div>
@@ -318,7 +317,7 @@ const openModal = () => {
           <UInput v-model="q" placeholder="Filter products..." />
           <UButton
             label="Add Product."
-            @click="store.isAdding = true"
+            @click="store.isSaving = true"
             class="focus:bg-green-400"
           >
             <span>Add Product</span>
