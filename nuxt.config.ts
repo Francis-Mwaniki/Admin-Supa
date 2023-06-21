@@ -4,6 +4,7 @@ export default defineNuxtConfig({
   modules: ['@nuxthq/ui',
   '@nuxtjs/partytown',
   '@nuxt/image',
+  'nuxt-delay-hydration',
   "nuxt-icon",
   "nuxt-lodash",
   '@nuxtjs/cloudinary',
@@ -14,6 +15,10 @@ export default defineNuxtConfig({
   "@pinia-plugin-persistedstate/nuxt",
   
 ],
+delayHydration: {
+  // enables nuxt-delay-hydration in dev mode for testing
+  debug: process.env.NODE_ENV === 'development'
+},
 partytown: {
  
 },
