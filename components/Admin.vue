@@ -1,4 +1,27 @@
 <script setup>
+import { userStore } from "~/store/user";
+const user = useSupabaseUser();
+const router = useRouter();
+const client = useSupabaseClient();
+const auth = useSupabaseAuthClient();
+const toast = useToast();
+const store = userStore();
+const EditUser = async () => {
+  store.showResetModal = true;
+  // const { data, error } = await client
+  //   .from("users")
+  //   .select("*")
+  //   .eq("id", user.value.id);
+  // if (error) {
+  //   console.log(error);
+  // } else {
+  //   console.log(data);
+  // }
+};
+const handleUser = async () => {
+  const currentUser = user.value.email;
+  return currentUser;
+};
 const items = [
   [
     {
@@ -6,6 +29,13 @@ const items = [
       avatar: {
         src: "https://avatars.githubusercontent.com/u/739984?v=4",
       },
+      click: () => {
+        router.push("/profile");
+      },
+    },
+    {
+      label: user.value?.email ? user.value?.email : "Not Logged in",
+      icon: "i-heroicons-user-20-solid",
     },
   ],
   [
@@ -14,31 +44,29 @@ const items = [
       icon: "i-heroicons-pencil-square-20-solid",
       shortcuts: ["E"],
       click: () => {
-        console.log("Edit");
+        /* emit toggle */
+        EditUser();
       },
     },
-    {
-      label: "Duplicate",
-      icon: "i-heroicons-document-duplicate-20-solid",
-      shortcuts: ["D"],
-      disabled: true,
-    },
   ],
+
   [
     {
-      label: "Archive",
-      icon: "i-heroicons-archive-box-20-solid",
-    },
-    {
-      label: "Move",
-      icon: "i-heroicons-arrow-right-circle-20-solid",
-    },
-  ],
-  [
-    {
-      label: "Delete",
-      icon: "i-heroicons-trash-20-solid",
+      label: "Logout",
+      icon: "i-heroicons-arrow-right-20-solid",
       shortcuts: ["⌘", "D"],
+      click: () => {
+        /* emit toggle */
+        auth.auth.signOut();
+        toast.add({
+          title: "Success",
+          description: "Logged out successfully",
+          status: "success",
+          duration: 5000,
+          isClosable: true,
+        });
+        router.push("/Login");
+      },
     },
   ],
 ];
