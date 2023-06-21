@@ -26,9 +26,9 @@
         class="h-full bg-green-500 rounded-full"
       ></div>
       <!-- show percentage example 40% -->
-      <div class="text-xs text-gray-500" v-if="uploadProgress > 0">
+      <div class="text-xs text-green-500" v-if="uploadProgress > 0">
         <!-- tailwind animate -->
-        <span class="animate-bounce text-gray-50 text-lg">{{ uploadProgress }}%</span>
+        <span class="text-white text-lg">{{ uploadProgress }}%</span>
       </div>
     </div>
 
