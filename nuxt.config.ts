@@ -1,3 +1,5 @@
+import { mode } from "process";
+
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
   devtools: { enabled: true },
@@ -38,6 +40,16 @@ partytown: {
   },
 
 css: ["~/assets/css/tailwind.css","~/assets/css/root.css"],
+
+
+plugins: [
+ {
+  src: '~/plugins/apexcharts.ts',
+  mode: 'client'
+ }
+  
+
+]
 
 // .eslintrc
 

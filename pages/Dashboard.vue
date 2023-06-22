@@ -1,6 +1,7 @@
 <script setup>
 import Admin from "@/components/Admin.vue";
 import reset_Password from "~/components/reset_Password.vue";
+import chart from "@/components/chart.vue";
 import { useFetch } from "nuxt/app";
 import { ref, computed, onMounted } from "vue";
 const client = useSupabaseClient();
@@ -325,117 +326,184 @@ const openModal = () => {
 </script>
 
 <template>
-  <div>
-    <div class="" v-show="store.showResetModal">
-      <reset_Password />
-    </div>
-    <div class="" v-if="!store.showResetModal">
-      <div class="flex justify-end items-end py-2"><Admin /></div>
-      <div
-        v-if="store.showModal"
-        class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-40"
-      >
-        <div class="bg-gray-950 z-20 rounded-lg p-8 max-w-2xl w-full">
-          <h2 class="text-2xl font-bold mb-4">
-            {{ store.isSaving ? "Edit product" : "Add Product" }}
-          </h2>
-          <form @submit.prevent="addProductToSupaBase">
-            <div class="mb-4">
-              <label for="name" class="block text-white">Name:</label>
-              <UInput
-                v-model="store.productData.name"
-                type="text"
-                id="name"
-                class="bg-gray-200 text-black border border-gray-300 rounded px-3 py-2 w-full"
-                required
-              />
-            </div>
-            <div class="mb-4">
-              <label for="size" class="block text-white">Price:</label>
-              <UInput
-                v-model="store.productData.size"
-                type="number"
-                id="size"
-                class="bg-gray-200 text-black border border-gray-300 rounded px-3 py-2 w-full"
-                required
-              />
-            </div>
-            <div class="mb-4 mt-2">
-              <label for="File" class="block text-white">Select File:</label>
-              <CloudUpload @uploaded="handleUrl" />
-            </div>
-
-            <div class="mb-4 mt-2">
-              <label for="desc" class="block text-white">Description:</label>
-              <UTextarea
-                v-model="store.productData.desc"
-                type="desc"
-                id="desc"
-                rows="3"
-                class="bg-gray-200 text-black border border-gray-300 rounded px-3 py-2 w-full"
-                required
-              />
-            </div>
-
-            <div
-              class="flex md:flex-row flex-col mx-auto justify-center gap-y-2 items-center md:justify-start w-full flex-1 max-w-xl gap-x-2"
-            >
-              <UButton
-                type="submit"
-                class="text-white px-6 md:w-1/2 text-center py-3 w-full align-middle"
-                color="green"
-                variant="solid"
-                :disabled="store.isSaving"
-                :loading="store.isSaving"
-              >
-                <p class="text-center">{{ store.isSaving ? "Save Changes" : "Add" }}</p>
-              </UButton>
-              <UButton
-                @click="store.showModal = false"
-                variant="solid"
-                class="px-4 md:w-1/2 w-full py-3"
-                >Cancel</UButton
-              >
-            </div>
-          </form>
-        </div>
+  <main>
+    <div>
+      <div class="" v-show="store.showResetModal">
+        <reset_Password />
       </div>
-      <div class="max-w-6xl mx-auto py-4">
+      <div class="" v-if="!store.showResetModal">
+        <div class="flex justify-end items-end py-2"><Admin /></div>
         <div
-          class="mx-auto flex flex-row gap-x-4 md:gap-y-1 gap-y-3 space-x-2 flex-grow flex-wrap"
+          v-if="store.showModal"
+          class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-40"
         >
-          <UInput v-model="q" placeholder="Filter products..." />
-          <UButton
-            label="Add Product."
-            @click="store.showModal = true"
-            class="focus:bg-green-400"
-          >
-            <span>Add Product</span>
-            <ClientOnly><Icon name="ic:round-plus" class="h-6 w-6" /></ClientOnly>
-          </UButton>
-          <UButton
-            label="Delete Product."
-            @click="deleteSelectedProducts"
-            :color="store.selected.length > 0 ? 'red' : 'green'"
-            :disabled="store.isDeleting"
-            :loading="store.isDeleting"
-          >
-            <span class="">{{ store.isDeleting ? "Deleting" : "Delete Product" }}</span>
-            <ClientOnly>
-              <Icon
-                v-if="!store.isDeleting"
-                name="ic:round-delete-forever"
-                class="w-6 h-6"
-            /></ClientOnly>
-          </UButton>
+          <div class="bg-gray-950 z-20 rounded-lg p-8 max-w-2xl w-full">
+            <h2 class="text-2xl font-bold mb-4">
+              {{ store.isSaving ? "Edit product" : "Add Product" }}
+            </h2>
+            <form @submit.prevent="addProductToSupaBase">
+              <div class="mb-4">
+                <label for="name" class="block text-white">Name:</label>
+                <UInput
+                  v-model="store.productData.name"
+                  type="text"
+                  id="name"
+                  class="bg-gray-200 text-black border border-gray-300 rounded px-3 py-2 w-full"
+                  required
+                />
+              </div>
+              <div class="mb-4">
+                <label for="size" class="block text-white">Price:</label>
+                <UInput
+                  v-model="store.productData.size"
+                  type="number"
+                  id="size"
+                  class="bg-gray-200 text-black border border-gray-300 rounded px-3 py-2 w-full"
+                  required
+                />
+              </div>
+              <div class="mb-4 mt-2">
+                <label for="File" class="block text-white">Select File:</label>
+                <CloudUpload @uploaded="handleUrl" />
+              </div>
+
+              <div class="mb-4 mt-2">
+                <label for="desc" class="block text-white">Description:</label>
+                <UTextarea
+                  v-model="store.productData.desc"
+                  type="desc"
+                  id="desc"
+                  rows="3"
+                  class="bg-gray-200 text-black border border-gray-300 rounded px-3 py-2 w-full"
+                  required
+                />
+              </div>
+
+              <div
+                class="flex md:flex-row flex-col mx-auto justify-center gap-y-2 items-center md:justify-start w-full flex-1 max-w-xl gap-x-2"
+              >
+                <UButton
+                  type="submit"
+                  class="text-white px-6 md:w-1/2 text-center py-3 w-full align-middle"
+                  color="green"
+                  variant="solid"
+                  :disabled="store.isSaving"
+                  :loading="store.isSaving"
+                >
+                  <p class="text-center">{{ store.isSaving ? "Save Changes" : "Add" }}</p>
+                </UButton>
+                <UButton
+                  @click="store.showModal = false"
+                  variant="solid"
+                  class="px-4 md:w-1/2 w-full py-3"
+                  >Cancel</UButton
+                >
+              </div>
+            </form>
+          </div>
         </div>
-        <div v-if="store.searching" class="overflow-x-auto">
-          <div class="sm:-mx-6 lg:-mx-8">
-            <div class="inline-block min-w-full sm:px-6 lg:px-8">
+        <div class="max-w-6xl mx-auto py-4">
+          <div
+            class="mx-auto flex flex-row gap-x-4 md:gap-y-1 gap-y-3 space-x-2 flex-grow flex-wrap"
+          >
+            <UInput v-model="q" placeholder="Filter products..." />
+            <UButton
+              label="Add Product."
+              @click="store.showModal = true"
+              class="focus:bg-green-400"
+            >
+              <span>Add Product</span>
+              <ClientOnly><Icon name="ic:round-plus" class="h-6 w-6" /></ClientOnly>
+            </UButton>
+            <UButton
+              label="Delete Product."
+              @click="deleteSelectedProducts"
+              :color="store.selected.length > 0 ? 'red' : 'green'"
+              :disabled="store.isDeleting"
+              :loading="store.isDeleting"
+            >
+              <span class="">{{ store.isDeleting ? "Deleting" : "Delete Product" }}</span>
+              <ClientOnly>
+                <Icon
+                  v-if="!store.isDeleting"
+                  name="ic:round-delete-forever"
+                  class="w-6 h-6"
+              /></ClientOnly>
+            </UButton>
+          </div>
+          <div v-if="store.searching" class="overflow-x-auto">
+            <div class="sm:-mx-6 lg:-mx-8">
+              <div class="inline-block min-w-full sm:px-6 lg:px-8">
+                <UTable
+                  class="mt-4 bg-gray-900"
+                  v-model="store.selected"
+                  :rows="filteredRows"
+                  :columns="columns"
+                  :sort="{ column: 'title' }"
+                  sort-asc-icon="i-heroicons-arrow-up-20-solid"
+                  sort-desc-icon="i-heroicons-arrow-down-20-solid"
+                  :sort-button="{
+                    icon: 'i-heroicons-sparkles-20-solid',
+                    color: 'primary',
+                    variant: 'outline',
+                    size: '2xs',
+                    square: false,
+                    ui: { rounded: 'rounded-full' },
+                  }"
+                >
+                  <template #name-data="{ row }">
+                    <NuxtImg :src="row.url" class="h-14 w-14 rounded-full" alt="" />
+                    <span
+                      :class="[
+                        store.selected.find((product) => product.id === row.id) &&
+                          'text-primary-500 dark:text-primary-400',
+                      ]"
+                      >{{ row.title }}</span
+                    >
+
+                    <span
+                      :class="[
+                        store.selected.find((product) => product.id === row.id) &&
+                          'text-primary-500 dark:text-primary-400',
+                      ]"
+                      >{{ row.price }}</span
+                    >
+
+                    <span
+                      :class="[
+                        store.selected.find((product) => product.id === row.id) &&
+                          'text-primary-500 dark:text-primary-400',
+                      ]"
+                      >{{ 23 + 3 }}</span
+                    >
+
+                    <span
+                      :class="[
+                        store.selected.find((product) => product.id === row.id) &&
+                          'text-primary-500 dark:text-primary-400',
+                      ]"
+                      >{{ row.id }}</span
+                    >
+                  </template>
+
+                  <template #actions-data="{ row }">
+                    <UDropdown :items="items(row)">
+                      <UButton
+                        variant="ghost"
+                        icon="i-heroicons-ellipsis-horizontal-20-solid"
+                      />
+                    </UDropdown>
+                  </template>
+                </UTable>
+              </div>
+            </div>
+          </div>
+
+          <div class="overflow-x-auto" v-if="!store.searching">
+            <div class="mt-4 bg-gray-900 sm:-mx-6 lg:-mx-8">
               <UTable
-                class="mt-4 bg-gray-900"
                 v-model="store.selected"
-                :rows="filteredRows"
+                :rows="rows"
                 :columns="columns"
                 :sort="{ column: 'title' }"
                 sort-asc-icon="i-heroicons-arrow-up-20-solid"
@@ -449,6 +517,7 @@ const openModal = () => {
                   ui: { rounded: 'rounded-full' },
                 }"
               >
+                {{ store.selected }}
                 <template #name-data="{ row }">
                   <NuxtImg :src="row.url" class="h-14 w-14 rounded-full" alt="" />
                   <span
@@ -457,30 +526,6 @@ const openModal = () => {
                         'text-primary-500 dark:text-primary-400',
                     ]"
                     >{{ row.title }}</span
-                  >
-
-                  <span
-                    :class="[
-                      store.selected.find((product) => product.id === row.id) &&
-                        'text-primary-500 dark:text-primary-400',
-                    ]"
-                    >{{ row.price }}</span
-                  >
-
-                  <span
-                    :class="[
-                      store.selected.find((product) => product.id === row.id) &&
-                        'text-primary-500 dark:text-primary-400',
-                    ]"
-                    >{{ 23 + 3 }}</span
-                  >
-
-                  <span
-                    :class="[
-                      store.selected.find((product) => product.id === row.id) &&
-                        'text-primary-500 dark:text-primary-400',
-                    ]"
-                    >{{ row.id }}</span
                   >
                 </template>
 
@@ -494,75 +539,37 @@ const openModal = () => {
                 </template>
               </UTable>
             </div>
+            <UPagination
+              v-model="page"
+              :page-count="pageCount"
+              :total="store.product.length"
+            />
+            <!-- total number of products with tailwindcss -->
+            <div class="flex justify-end">
+              <span class="text-sm text-gray-500 dark:text-gray-400">
+                Showing
+                <span class="font-medium">{{ (page - 1) * pageCount + 1 }}</span>
+                to
+                <span class="font-medium">{{ page * pageCount }}</span>
+                of
+                <span class="font-medium">{{ store.product.length }}</span>
+                results
+              </span>
+            </div>
           </div>
-        </div>
 
-        <div class="overflow-x-auto" v-if="!store.searching">
-          <div class="mt-4 bg-gray-900 sm:-mx-6 lg:-mx-8">
-            <UTable
-              v-model="store.selected"
-              :rows="rows"
-              :columns="columns"
-              :sort="{ column: 'title' }"
-              sort-asc-icon="i-heroicons-arrow-up-20-solid"
-              sort-desc-icon="i-heroicons-arrow-down-20-solid"
-              :sort-button="{
-                icon: 'i-heroicons-sparkles-20-solid',
-                color: 'primary',
-                variant: 'outline',
-                size: '2xs',
-                square: false,
-                ui: { rounded: 'rounded-full' },
-              }"
-            >
-              {{ store.selected }}
-              <template #name-data="{ row }">
-                <NuxtImg :src="row.url" class="h-14 w-14 rounded-full" alt="" />
-                <span
-                  :class="[
-                    store.selected.find((product) => product.id === row.id) &&
-                      'text-primary-500 dark:text-primary-400',
-                  ]"
-                  >{{ row.title }}</span
-                >
-              </template>
-
-              <template #actions-data="{ row }">
-                <UDropdown :items="items(row)">
-                  <UButton
-                    variant="ghost"
-                    icon="i-heroicons-ellipsis-horizontal-20-solid"
-                  />
-                </UDropdown>
-              </template>
-            </UTable>
-          </div>
-          <UPagination
-            v-model="page"
-            :page-count="pageCount"
-            :total="store.product.length"
+          <!-- selected show -->
+          <Selected
+            :selected="store.selected"
+            :product="store.product"
+            @productUrl="cloudinaryUrl($event)"
           />
-          <!-- total number of products with tailwindcss -->
-          <div class="flex justify-end">
-            <span class="text-sm text-gray-500 dark:text-gray-400">
-              Showing
-              <span class="font-medium">{{ (page - 1) * pageCount + 1 }}</span>
-              to
-              <span class="font-medium">{{ page * pageCount }}</span>
-              of
-              <span class="font-medium">{{ store.product.length }}</span>
-              results
-            </span>
-          </div>
         </div>
-
-        <!-- selected show -->
-        <Selected
-          :selected="store.selected"
-          :product="store.product"
-          @productUrl="cloudinaryUrl($event)"
-        />
       </div>
     </div>
-  </div>
+
+    <ClientOnly>
+      <chart />
+    </ClientOnly>
+  </main>
 </template>

@@ -1,14 +1,18 @@
 {
     "vue3snippets.enable-compile-vue-file-on-did-save-code": true,
     "cSpell.words": [
+        "apexchart",
+        "apexcharts",
         "Apprite",
         "appwrite",
         "axios",
         "cloudinary",
         "mpesa",
+        "nuxt",
         "nuxtjs",
         "partytown",
-        "supabase"
+        "supabase",
+        "xaxis"
     ],
     "vue.codeActions.enabled": false
 }

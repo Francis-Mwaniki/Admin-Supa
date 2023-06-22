@@ -30,11 +30,13 @@
   },
   "dependencies": {
     "@nuxtjs/cloudinary": "^2.0.0-rc.3",
+    "apexcharts": "^3.41.0",
     "axios": "^1.4.0",
     "dayjs": "^1.11.8",
     "moment": "^2.29.4",
     "nuxt-appwrite": "^1.0.4",
     "nuxt-delay-hydration": "^1.2.1",
-    "vue-meta": "^2.4.0"
+    "vue-meta": "^2.4.0",
+    "vue3-apexcharts": "^1.4.1"
   }
 }
