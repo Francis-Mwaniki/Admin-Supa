@@ -1,5 +1,5 @@
 <template>
-  <div class="mx-auto py-8 bg-gray-950 min-h-screen">
+  <div class="mx-auto py-8 bg-gray-950 min-h-screen" v-if="!store.isAppwriteUser">
     <div class="max-w-lg mx-auto bg-gray-800 shadow-md rounded-lg p-6">
       <h1 class="text-2xl font-bold mb-4 text-green-600">Profile</h1>
       <div class="mb-4">
@@ -48,11 +48,16 @@
       </div>
     </div>
   </div>
+
+  <Apprite v-if="store.isAppwriteUser" />
 </template>
 
 <script setup>
+import { userStore } from "@/store/user";
+
 import moment from "moment";
 const user = useSupabaseUser();
+const store = userStore();
 const profile = computed(() => user.value || {});
 
 function formatDate(date) {

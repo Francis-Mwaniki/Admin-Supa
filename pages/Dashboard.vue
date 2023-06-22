@@ -6,16 +6,42 @@ import { ref, computed, onMounted } from "vue";
 const client = useSupabaseClient();
 const user = useSupabaseUser();
 const auth = useSupabaseAuthClient();
+const { account } = useAppwrite();
 import { userStore } from "~/store/user.js";
 const q = ref("");
+const AppwriteUser = ref({});
 const store = userStore();
 
-onMounted(() => {
-  console.log(user.value);
+const fetchAccount = async () => {
+  store.isAppwriteUser = true;
+  try {
+    AppwriteUser.value = await account.get();
+    console.log(AppwriteUser.value);
+  } catch (e) {
+    toast.add({
+      title: "Note",
+      description: e.message ? e.message : e,
+    });
+    navigateTo("/Login");
+  }
+};
+
+onBeforeMount(() => {
+  fetchAccount();
 });
-definePageMeta({
-  middleware: "auth",
+
+onMounted(async () => {
+  /* check if user exist if exist dont call fetchAccount else call if not redirect  Login*/
 });
+watch([AppwriteUser, user], () => {
+  if (!user.value && !AppwriteUser.value) {
+    navigateTo("/Login");
+  }
+});
+// });
+// definePageMeta({
+//   middleware: "auth",
+// });
 // onMounted(() => {
 //   const data = useFetch("/api/mpesa");
 //   return new Promise((resolve, reject) => {
@@ -114,7 +140,7 @@ const addProductToSupaBase = async () => {
     store.showModal = false;
   }
 };
-/*    deleteSelectedProducts in supabase 
+/*    deleteSelectedProducts in supabase
 const { data, error } = await supabase
   .from('Products')
   .delete()
@@ -293,7 +319,7 @@ const openModal = () => {
 </script>
 
 <template>
-  <div v-if="user">
+  <div v-if="user || AppwriteUser">
     <div class="" v-show="store.showResetModal">
       <reset_Password />
     </div>

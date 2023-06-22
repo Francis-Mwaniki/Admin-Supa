@@ -19,7 +19,6 @@ export default defineNuxtConfig({
 appwrite: {
   endpoint: 'https://cloud.appwrite.io/v1',
   project: '6493f90468e18c956a76',
-  key:'c0e67d74665ffb2a277fa8b6804789a312f688dfaf98b0705bdc0c72685d14c0d2b562676acc267b577ddd778eda34ee1321a4499aa1e56eef40f35eec8633a117b837acdea35a5df76217f81f1cb4becf5b0dd1722300487da19e3cc816e49f89ba8061d9c6a33a6bcf179efdf180e974ce98c26533de8a5483b743de4a0748'
 },
 delayHydration: {
   // enables nuxt-delay-hydration in dev mode for testing

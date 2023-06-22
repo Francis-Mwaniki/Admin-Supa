@@ -8,7 +8,8 @@
       <div class="mt-4 w-3 h-3 bg-gray-200 rounded-full animate-spin"></div>
     </div>
   </div>
-  <div class="flex justify-center items-center h-screen" v-if="showModal">
+  <div class="flex justify-center items-center h-screen gap-x-2" v-if="showModal">
+    <div><Appwrite /></div>
     <form
       @submit.prevent="LoginUser()"
       class="w-1/3 p-8 bg-gray-900 rounded shadow-lg transition-all duration-500 transform"
