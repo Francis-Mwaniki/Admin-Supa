@@ -7,6 +7,7 @@ import { defineStore } from "pinia";
     const isAdding = ref(false);
     const isLoading = ref(false);
     const resetting = ref(false);
+    const isAppwriteUser = ref(false);
     const showModal = ref(false);
     const isUpdating = ref(false);
     const selected = ref([]);
@@ -19,5 +20,5 @@ import { defineStore } from "pinia";
 
     
   
-    return { user, product,resetting, isUpdating, isAdding, isLoading, showModal, selected, isDeleting, showResetModal, isEditing, isSaving, productData, searching }
+    return { user, product,resetting,isAppwriteUser, isUpdating, isAdding, isLoading, showModal, selected, isDeleting, showResetModal, isEditing, isSaving, productData, searching }
   })
