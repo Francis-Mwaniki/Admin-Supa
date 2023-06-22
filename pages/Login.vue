@@ -8,17 +8,25 @@
       <div class="mt-4 w-3 h-3 bg-gray-200 rounded-full animate-spin"></div>
     </div>
   </div>
-  <div class="flex justify-center items-center h-screen gap-x-2" v-if="showModal">
-    <div><Appwrite /></div>
+  <div
+    class="flex justify-center items-center gap-x-2 min-h-screen py-2 gap-y-2"
+    v-if="showModal"
+  >
+    <div v-if="store.signInWithPhone">
+      <!-- h2 sign in with phone -->
+
+      <Appwrite />
+    </div>
     <form
       @submit.prevent="LoginUser()"
-      class="w-1/3 p-8 bg-gray-900 rounded shadow-lg transition-all duration-500 transform"
+      class="md:w-1/3 w-full p-8 bg-gray-900 rounded shadow-lg transition-all duration-500 transform"
       :class="{
         'translate-y-0 opacity-100': showModal,
         '-translate-y-10 opacity-0': !showModal,
       }"
+      v-if="!store.signInWithPhone"
     >
-      <h2 class="text-2xl mb-4">Welcome Back!</h2>
+      <h2 class="text-2xl mb-4">Welcome Back! Login</h2>
 
       <div class="mb-4">
         <label for="email" class="block mb-2">Email</label>
@@ -42,8 +50,7 @@
       <div class="flex">
         <UButton
           type="submit"
-          class="text-white px-7 justify-self-center"
-          color="blue"
+          class="flex w-full py-4 text-white font-medium items-center justify-center space-x-3 rounded-md shadow-lg bg-green-600 filter hover:brightness-90"
           variant="solid"
           :disabled="isLogin"
           :loading="isLogin"
@@ -53,7 +60,8 @@
       </div>
       <!-- dont have an account -->
       <div class="flex justify-end">
-        <p class="text-gray-400">
+        <!-- <p class="text-gray-400">
+
           Don't have an account?
           <span
             class="text-blue-500 cursor-pointer"
@@ -64,17 +72,31 @@
           >
             Register
           </span>
-        </p>
+        </p> -->
+        <div class="flex space-x-2 w-full items-center text-gray-500 my-5">
+          <div class="w-full bg-gray-300 h-0.5"></div>
+          <p class="text-sm font-light">OR</p>
+          <div class="w-full bg-gray-300 h-0.5"></div>
+        </div>
       </div>
+      <p class="text-white flex justify-end">
+        <a
+          @click="store.signInWithPhone = true"
+          class="underline text-white italic text-sm cursor-pointer"
+          >continue with phone</a
+        >
+      </p>
     </form>
   </div>
 </template>
 
 <script>
 import { ref } from "vue";
+import { userStore } from "~/store/user";
 export default {
   setup() {
     const client = useSupabaseClient();
+    const store = userStore();
     const user = useSupabaseUser();
     const toast = useToast();
     const showModal = ref(false);
@@ -142,6 +164,7 @@ export default {
       isLogin,
       LoginUser,
       showModal,
+      store,
     };
   },
 };

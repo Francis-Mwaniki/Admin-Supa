@@ -1,10 +1,13 @@
 <template>
   <div class="bg-background items-center justify-center flex">
     <form
-      class="flex flex-col bg-gray-800 p-10 rounded-xl shadow-2xl items-center space-y-8 max-w-lg text-lg text-gray-700"
+      class="flex flex-col bg-gray-900 p-10 rounded-xl shadow-2xl items-center space-y-8 max-w-lg text-lg text-gray-700"
     >
+      <h2 class="text-2xl mx-auto flex justify-center text-white">Sign In phone!</h2>
       <div class="flex flex-col space-y-2 w-full">
-        <label class="block text-md font-medium" for="phone">Phone Number</label>
+        <label class="block text-md font-medium text-white" for="phone"
+          >Phone Number</label
+        >
         <input
           name="phone"
           type="text"
@@ -27,29 +30,40 @@
         />
       </div>
 
-      <button
+      <UButton
         v-if="!verificationSent"
         @click.prevent="signUpWithPhone"
-        class="flex w-full py-4 text-white font-medium items-center justify-center space-x-3 rounded-md shadow-lg bg-background filter hover:brightness-90"
+        variant="solid"
+        :disabled="isLogin"
+        :loading="isLogin"
+        class="flex w-full py-4 text-white font-medium items-center justify-center space-x-3 rounded-md shadow-lg bg-green-600 filter hover:brightness-90"
       >
-        <p>Get Code</p>
-      </button>
+        <p>{{ isLogin ? "Generating" : "Get Code" }}</p>
+      </UButton>
 
-      <button
+      <UButton
         v-else
         @click.prevent="verify"
-        class="flex w-full py-4 text-white font-medium items-center justify-center space-x-3 rounded-md shadow-lg bg-background filter hover:brightness-90"
+        class="flex w-full py-4 text-white font-medium items-center justify-center space-x-3 rounded-md shadow-lg bg-green-600 filter hover:brightness-90"
+        variant="solid"
+        :disabled="isLogin"
+        :loading="isLogin"
       >
-        <p>Verify</p>
-      </button>
+        <p>{{ isLogin ? "Verifying" : "Verify" }}</p>
+      </UButton>
 
       <div class="flex space-x-2 w-full items-center text-gray-500">
         <div class="w-full bg-gray-300 h-0.5"></div>
         <p class="text-sm font-light">OR</p>
         <div class="w-full bg-gray-300 h-0.5"></div>
       </div>
-
-      <div class="cursor-pointer" @click="goto('/')">Sign up with Email?</div>
+      <p class="text-white">
+        <a
+          @click="store.signInWithPhone = false"
+          class="underline text-white italic text-sm cursor-pointer"
+          >continue with Email</a
+        >
+      </p>
     </form>
   </div>
 </template>
@@ -62,6 +76,8 @@ export default {
     const toast = useToast();
     const number = ref("");
     const router = useRouter();
+    const isLogin = ref(false);
+    let adminPhone = ref(+254769982944);
     const store = userStore();
     const verificationSent = ref(false);
     const verificationCode = ref("");
@@ -80,6 +96,7 @@ export default {
     };
 
     const verify = async () => {
+      isLogin.value = true;
       try {
         let response = await account.updatePhoneSession(
           user.value.userId,
@@ -88,6 +105,7 @@ export default {
         console.log("Response ", response);
         router.push("/Dashboard");
       } catch (e) {
+        isLogin.value = false;
         toast.add({
           title: "note",
           description: e.message ? e.message : e,
@@ -104,10 +122,11 @@ export default {
         user.value = await account.get();
         console.log(user.value);
       } catch (e) {
-        toast.add({
-          title: "Note",
-          description: e.message ? e.message : e,
-        });
+        console.log(e);
+        // toast.add({
+        //   title: "Note",
+        //   description: e.message ? e.message : e,
+        // });
         // navigateTo("/Login");
       }
     };
@@ -116,9 +135,10 @@ export default {
       number,
       verificationSent,
       verificationCode,
+      isLogin,
       user,
       signUpWithPhone,
-
+      store,
       verify,
       goto: gotoPage,
     };

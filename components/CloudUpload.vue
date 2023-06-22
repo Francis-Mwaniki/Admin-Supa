@@ -116,8 +116,12 @@ export default {
 
 <style scoped>
 #dropbox {
-  border: 4px dashed #ccc;
   padding-left: 8px;
+  padding-right: 8px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  background-color: #3d3d3d;
+  color: #ffffff;
 }
 
 .my-form {
@@ -129,6 +133,7 @@ export default {
   position: relative;
   height: 8px;
   margin-top: 4px;
+  margin-bottom: 4px;
 }
 
 .progress-bar .progress {

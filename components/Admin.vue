@@ -1,27 +1,36 @@
 <script setup>
 import { userStore } from "~/store/user";
+
 const user = useSupabaseUser();
+const AppwriteUser = useAppwrite();
+const currentAppwriteUser = ref("");
 const router = useRouter();
 const client = useSupabaseClient();
 const auth = useSupabaseAuthClient();
 const toast = useToast();
 const store = userStore();
+
 const EditUser = async () => {
   store.showResetModal = true;
-  // const { data, error } = await client
-  //   .from("users")
-  //   .select("*")
-  //   .eq("id", user.value.id);
-  // if (error) {
-  //   console.log(error);
-  // } else {
-  //   console.log(data);
-  // }
 };
-const handleUser = async () => {
-  const currentUser = user.value.email;
-  return currentUser;
+const fetchAccount = async () => {
+  store.isAppwriteUser = true;
+  try {
+    store.currentAdmin = (await AppwriteUser.account.get()).phone;
+    return store.currentAdmin;
+  } catch (e) {
+    store.isAppwriteUser = false;
+    toast.add({
+      title: "Note",
+      description: e.message ? e.message : e,
+    });
+  }
 };
+onMounted(() => {
+  console.log("supabase user", user.value);
+
+  fetchAccount();
+});
 const items = [
   [
     {
@@ -34,8 +43,19 @@ const items = [
       },
     },
     {
-      label: user.value?.email ? user.value?.email : "Not Logged in",
+      label: user.value ? user.value.email : "No email",
       icon: "i-heroicons-user-20-solid",
+      click: () => {
+        router.push("/profile");
+      },
+    },
+    {
+      label: store.currentAdmin ? store.currentAdmin : "No phone",
+
+      icon: "i-heroicons-user-20-solid",
+      click: () => {
+        router.push("/profile");
+      },
     },
   ],
   [

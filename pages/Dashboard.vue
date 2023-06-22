@@ -10,19 +10,21 @@ const { account } = useAppwrite();
 import { userStore } from "~/store/user.js";
 const q = ref("");
 const AppwriteUser = ref({});
+// AppwriteUser.value = await account.get();
 const store = userStore();
 
 const fetchAccount = async () => {
   store.isAppwriteUser = true;
   try {
     AppwriteUser.value = await account.get();
-    console.log(AppwriteUser.value);
+    // console.log(AppwriteUser.value);
   } catch (e) {
-    toast.add({
-      title: "Note",
-      description: e.message ? e.message : e,
-    });
-    navigateTo("/Login");
+    console.log(e);
+    // store.isAppwriteUser = false;
+    // toast.add({
+    //   title: "Note",
+    //   description: e.message ? e.message : e,
+    // });
   }
 };
 
@@ -34,7 +36,11 @@ onMounted(async () => {
   /* check if user exist if exist dont call fetchAccount else call if not redirect  Login*/
 });
 watch([AppwriteUser, user], () => {
-  if (!user.value && !AppwriteUser.value) {
+  if (AppwriteUser.value !== null) {
+    navigateTo("/Dashboard");
+  } else if (user.value !== null) {
+    navigateTo("/Dashboard");
+  } else {
     navigateTo("/Login");
   }
 });
@@ -319,7 +325,7 @@ const openModal = () => {
 </script>
 
 <template>
-  <div v-if="user || AppwriteUser">
+  <div>
     <div class="" v-show="store.showResetModal">
       <reset_Password />
     </div>
@@ -329,14 +335,14 @@ const openModal = () => {
         v-if="store.showModal"
         class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-40"
       >
-        <div class="bg-gray-900 bg-opacity-80 z-20 rounded-lg p-8 max-w-2xl w-full">
+        <div class="bg-gray-950 z-20 rounded-lg p-8 max-w-2xl w-full">
           <h2 class="text-2xl font-bold mb-4">
             {{ store.isSaving ? "Edit product" : "Add Product" }}
           </h2>
           <form @submit.prevent="addProductToSupaBase">
             <div class="mb-4">
               <label for="name" class="block text-white">Name:</label>
-              <input
+              <UInput
                 v-model="store.productData.name"
                 type="text"
                 id="name"
@@ -346,7 +352,7 @@ const openModal = () => {
             </div>
             <div class="mb-4">
               <label for="size" class="block text-white">Price:</label>
-              <input
+              <UInput
                 v-model="store.productData.size"
                 type="number"
                 id="size"
@@ -360,28 +366,34 @@ const openModal = () => {
             </div>
 
             <div class="mb-4 mt-2">
-              <label for="desc" class="block text-white">desc:</label>
-              <input
+              <label for="desc" class="block text-white">Description:</label>
+              <UTextarea
                 v-model="store.productData.desc"
                 type="desc"
                 id="desc"
+                rows="3"
                 class="bg-gray-200 text-black border border-gray-300 rounded px-3 py-2 w-full"
                 required
               />
             </div>
 
-            <div class="flex justify-end">
+            <div
+              class="flex md:flex-row flex-col mx-auto justify-center gap-y-2 items-center md:justify-start w-full flex-1 max-w-xl gap-x-2"
+            >
               <UButton
                 type="submit"
-                class="text-white"
+                class="text-white px-6 md:w-1/2 text-center py-3 w-full align-middle"
                 color="green"
                 variant="solid"
                 :disabled="store.isSaving"
                 :loading="store.isSaving"
               >
-                {{ store.isSaving ? "Save Changes" : "Add" }}
+                <p class="text-center">{{ store.isSaving ? "Save Changes" : "Add" }}</p>
               </UButton>
-              <UButton @click="store.showModal = false" variant="solid" class="ml-2"
+              <UButton
+                @click="store.showModal = false"
+                variant="solid"
+                class="px-4 md:w-1/2 w-full py-3"
                 >Cancel</UButton
               >
             </div>
@@ -389,7 +401,9 @@ const openModal = () => {
         </div>
       </div>
       <div class="max-w-6xl mx-auto py-4">
-        <div class="mx-auto flex flex-row gap-x-4 space-x-2">
+        <div
+          class="mx-auto flex flex-row gap-x-4 md:gap-y-1 gap-y-3 space-x-2 flex-grow flex-wrap"
+        >
           <UInput v-model="q" placeholder="Filter products..." />
           <UButton
             label="Add Product."
@@ -415,107 +429,114 @@ const openModal = () => {
             /></ClientOnly>
           </UButton>
         </div>
-        <div v-if="store.searching">
-          <UTable
-            class="mt-4 bg-gray-900"
-            v-model="store.selected"
-            :rows="filteredRows"
-            :columns="columns"
-            :sort="{ column: 'title' }"
-            sort-asc-icon="i-heroicons-arrow-up-20-solid"
-            sort-desc-icon="i-heroicons-arrow-down-20-solid"
-            :sort-button="{
-              icon: 'i-heroicons-sparkles-20-solid',
-              color: 'primary',
-              variant: 'outline',
-              size: '2xs',
-              square: false,
-              ui: { rounded: 'rounded-full' },
-            }"
-          >
-            <template #name-data="{ row }">
-              <NuxtImg :src="row.url" class="h-14 w-14 rounded-full" alt="" />
-              <span
-                :class="[
-                  store.selected.find((product) => product.id === row.id) &&
-                    'text-primary-500 dark:text-primary-400',
-                ]"
-                >{{ row.title }}</span
+        <div v-if="store.searching" class="overflow-x-auto">
+          <div class="sm:-mx-6 lg:-mx-8">
+            <div class="inline-block min-w-full sm:px-6 lg:px-8">
+              <UTable
+                class="mt-4 bg-gray-900"
+                v-model="store.selected"
+                :rows="filteredRows"
+                :columns="columns"
+                :sort="{ column: 'title' }"
+                sort-asc-icon="i-heroicons-arrow-up-20-solid"
+                sort-desc-icon="i-heroicons-arrow-down-20-solid"
+                :sort-button="{
+                  icon: 'i-heroicons-sparkles-20-solid',
+                  color: 'primary',
+                  variant: 'outline',
+                  size: '2xs',
+                  square: false,
+                  ui: { rounded: 'rounded-full' },
+                }"
               >
+                <template #name-data="{ row }">
+                  <NuxtImg :src="row.url" class="h-14 w-14 rounded-full" alt="" />
+                  <span
+                    :class="[
+                      store.selected.find((product) => product.id === row.id) &&
+                        'text-primary-500 dark:text-primary-400',
+                    ]"
+                    >{{ row.title }}</span
+                  >
 
-              <span
-                :class="[
-                  store.selected.find((product) => product.id === row.id) &&
-                    'text-primary-500 dark:text-primary-400',
-                ]"
-                >{{ row.price }}</span
-              >
-              <span
-                :class="[
-                  store.selected.find((product) => product.id === row.id) &&
-                    'text-primary-500 dark:text-primary-400',
-                ]"
-                >{{ 23 + 3 }}</span
-              >
+                  <span
+                    :class="[
+                      store.selected.find((product) => product.id === row.id) &&
+                        'text-primary-500 dark:text-primary-400',
+                    ]"
+                    >{{ row.price }}</span
+                  >
 
-              <span
-                :class="[
-                  store.selected.find((product) => product.id === row.id) &&
-                    'text-primary-500 dark:text-primary-400',
-                ]"
-                >{{ row.id }}</span
-              >
-            </template>
+                  <span
+                    :class="[
+                      store.selected.find((product) => product.id === row.id) &&
+                        'text-primary-500 dark:text-primary-400',
+                    ]"
+                    >{{ 23 + 3 }}</span
+                  >
 
-            <template #actions-data="{ row }">
-              <UDropdown :items="items(row)">
-                <UButton
-                  variant="ghost"
-                  icon="i-heroicons-ellipsis-horizontal-20-solid"
-                />
-              </UDropdown>
-            </template>
-          </UTable>
+                  <span
+                    :class="[
+                      store.selected.find((product) => product.id === row.id) &&
+                        'text-primary-500 dark:text-primary-400',
+                    ]"
+                    >{{ row.id }}</span
+                  >
+                </template>
+
+                <template #actions-data="{ row }">
+                  <UDropdown :items="items(row)">
+                    <UButton
+                      variant="ghost"
+                      icon="i-heroicons-ellipsis-horizontal-20-solid"
+                    />
+                  </UDropdown>
+                </template>
+              </UTable>
+            </div>
+          </div>
         </div>
-        <div class="" v-if="!store.searching">
-          <UTable
-            v-model="store.selected"
-            class="mt-4 bg-gray-900"
-            :rows="rows"
-            :columns="columns"
-            :sort="{ column: 'title' }"
-            sort-asc-icon="i-heroicons-arrow-up-20-solid"
-            sort-desc-icon="i-heroicons-arrow-down-20-solid"
-            :sort-button="{
-              icon: 'i-heroicons-sparkles-20-solid',
-              color: 'primary',
-              variant: 'outline',
-              size: '2xs',
-              square: false,
-              ui: { rounded: 'rounded-full' },
-            }"
-          >
-            {{ store.selected }}
-            <template #name-data="{ row }">
-              <NuxtImg :src="row.url" class="h-14 w-14 rounded-full" alt="" />
-              <span
-                :class="[
-                  store.selected.find((product) => product.id === row.id) &&
-                    'text-primary-500 dark:text-primary-400',
-                ]"
-                >{{ row.title }}</span
-              >
-            </template>
 
-            <template #actions-data="{ row }">
-              <UDropdown :items="items(row)">
-                <UButton
-                  variant="ghost"
-                  icon="i-heroicons-ellipsis-horizontal-20-solid"
-                />
-              </UDropdown>
-            </template>
-          </UTable>
+        <div class="overflow-x-auto" v-if="!store.searching">
+          <div class="mt-4 bg-gray-900 sm:-mx-6 lg:-mx-8">
+            <UTable
+              v-model="store.selected"
+              :rows="rows"
+              :columns="columns"
+              :sort="{ column: 'title' }"
+              sort-asc-icon="i-heroicons-arrow-up-20-solid"
+              sort-desc-icon="i-heroicons-arrow-down-20-solid"
+              :sort-button="{
+                icon: 'i-heroicons-sparkles-20-solid',
+                color: 'primary',
+                variant: 'outline',
+                size: '2xs',
+                square: false,
+                ui: { rounded: 'rounded-full' },
+              }"
+            >
+              {{ store.selected }}
+              <template #name-data="{ row }">
+                <NuxtImg :src="row.url" class="h-14 w-14 rounded-full" alt="" />
+                <span
+                  :class="[
+                    store.selected.find((product) => product.id === row.id) &&
+                      'text-primary-500 dark:text-primary-400',
+                  ]"
+                  >{{ row.title }}</span
+                >
+              </template>
+
+              <template #actions-data="{ row }">
+                <UDropdown :items="items(row)">
+                  <UButton
+                    variant="ghost"
+                    icon="i-heroicons-ellipsis-horizontal-20-solid"
+                  />
+                </UDropdown>
+              </template>
+            </UTable>
+          </div>
           <UPagination
             v-model="page"
             :page-count="pageCount"
@@ -534,6 +555,7 @@ const openModal = () => {
             </span>
           </div>
         </div>
+
         <!-- selected show -->
         <Selected
           :selected="store.selected"

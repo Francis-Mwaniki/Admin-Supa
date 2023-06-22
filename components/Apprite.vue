@@ -1,5 +1,5 @@
 <template>
-  <div class="items-center justify-center flex py-2">
+  <div class="items-center justify-center flex py-3">
     <form
       class="flex flex-col bg-gray-900 p-10 rounded-xl shadow-2xl items-center space-y-8 w-full max-w-lg text-lg text-gray-700"
     >
@@ -52,12 +52,14 @@
             class="focus:ring-accent focus:border-accent block w-full rounded-md sm:text-sm border border-gray-300 text-white py-3 px-3"
             placeholder="Enter your Phone Number"
           />
-          <button
+          <UButton
             @click.prevent="updatePhone"
             class="text-white font-medium rounded-md shadow-lg bg-background filter hover:brightness-90 px-6"
+            variant="solid"
+            color="green"
           >
             Update
-          </button>
+          </UButton>
         </div>
       </div>
 
@@ -77,29 +79,46 @@
             class="focus:ring-accent focus:border-accent block w-full rounded-md sm:text-sm border border-gray-300 text-white py-3 px-3"
             placeholder="Enter your verification code"
           />
-          <button
+          <UButton
             @click.prevent="verifyPhone"
             class="text-white font-medium rounded-md shadow-lg bg-background filter hover:brightness-90 px-6"
+            variant="solid"
+            color="green"
           >
             Verify
-          </button>
+          </UButton>
         </div>
       </div>
 
-      <button
+      <UButton
         v-if="!codeSent && !user.phoneVerification"
         @click.prevent="createVerification"
         class="flex w-full py-4 text-white font-medium items-center justify-center space-x-3 rounded-md shadow-lg bg-background filter hover:brightness-90"
+        variant="solid"
+        color="green"
       >
         Verify Phone
-      </button>
+      </UButton>
 
-      <button
+      <UButton
         @click.prevent="logout"
         class="flex w-full py-4 text-white font-medium items-center justify-center space-x-3 rounded-md shadow-lg bg-background filter hover:brightness-90"
+        variant="solid"
+        color="green"
       >
         Logout
-      </button>
+      </UButton>
+      <div class="flex justify-center mt-4">
+        <UButton
+          color="green"
+          variant="solid"
+          class="text-white px-7 justify-self-center"
+          @click="$router.push('/Dashboard')"
+        >
+          <Icon name="ic:round-arrow-back" class="mr-2" />
+          Go Back
+        </UButton>
+      </div>
     </form>
   </div>
 </template>
@@ -117,7 +136,7 @@ const logout = async () => {
   try {
     user.value = await account.get();
     console.log("user", user.value.$id);
-    await account.deleteSession();
+    await account.deleteSession("current");
     navigateTo("/Login");
   } catch (e) {
     toast.add({
@@ -186,11 +205,11 @@ const fetchAccount = async () => {
     user.value = await account.get();
     console.log(user.value);
   } catch (e) {
+    store.isAppwriteUser = false;
     toast.add({
       title: "Note",
       description: e.message ? e.message : e,
     });
-    navigateTo("/Login");
   }
 };
 

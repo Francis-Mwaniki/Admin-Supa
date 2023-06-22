@@ -6,10 +6,10 @@
       <div class="mt-4 w-3 h-3 bg-gray-200 rounded-full animate-spin"></div>
     </div>
   </div>
-  <div class="flex justify-center items-center h-screen" v-if="store.showResetModal">
+  <div class="flex justify-center items-center min-h-screen" v-if="store.showResetModal">
     <form
       @submit.prevent="resetPassword"
-      class="w-1/3 p-8 bg-gray-900 rounded shadow-lg transition-all duration-500 transform"
+      class="md:w-1/3 w-full p-8 bg-gray-900 rounded shadow-lg transition-all duration-500 transform"
       :class="{
         'translate-y-0 opacity-100': store.showResetModal,
         '-translate-y-10 opacity-0': !store.showResetModal,
@@ -27,11 +27,11 @@
         />
       </div>
 
-      <div class="flex">
+      <div class="flex my-5">
         <UButton
           type="submit"
-          class="text-white px-7 justify-self-center"
-          color="blue"
+          class="flex w-full py-4 text-white font-medium items-center justify-center space-x-3 rounded-md shadow-lg bg-green-600 filter hover:brightness-90"
+          color="green"
           variant="solid"
           :disabled="store.resetting"
           :loading="store.resetting"

@@ -5,7 +5,9 @@ import { defineStore } from "pinia";
     const user=useSupabaseUser() 
     const product = ref([]);
     const isAdding = ref(false);
+    const signInWithPhone=ref(false);
     const isLoading = ref(false);
+    const currentAdmin=ref("");
     const resetting = ref(false);
     const isAppwriteUser = ref(false);
     const showModal = ref(false);
@@ -20,5 +22,5 @@ import { defineStore } from "pinia";
 
     
   
-    return { user, product,resetting,isAppwriteUser, isUpdating, isAdding, isLoading, showModal, selected, isDeleting, showResetModal, isEditing, isSaving, productData, searching }
+    return { user,currentAdmin, product,resetting,isAppwriteUser,signInWithPhone, isUpdating, isAdding, isLoading, showModal, selected, isDeleting, showResetModal, isEditing, isSaving, productData, searching }
   })
