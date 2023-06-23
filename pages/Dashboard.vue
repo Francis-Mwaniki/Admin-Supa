@@ -10,6 +10,7 @@ const auth = useSupabaseAuthClient();
 const { account } = useAppwrite();
 import { userStore } from "~/store/user.js";
 import DarkChart from "~/components/DarkChart.vue";
+import moment from "moment";
 const q = ref("");
 const AppwriteUser = ref({});
 // AppwriteUser.value = await account.get();
@@ -18,6 +19,15 @@ const manageProducts = ref(true);
 const isOpen = ref(false);
 const analytics = ref(false);
 
+function formatDate(date) {
+  return date ? moment(date).format("MMMM Do YYYY, h:mm:ss a") : "Never";
+}
+function formatCurrency(amount) {
+  return new Intl.NumberFormat("en-US", {
+    style: "currency",
+    currency: "KES",
+  }).format(amount);
+}
 const fetchAccount = async () => {
   store.isAppwriteUser = true;
   try {
@@ -255,7 +265,7 @@ const columns = [
   { sortable: true, key: "name", label: "Name" },
   { sortable: true, key: "price", label: "Price" },
   { sortable: true, key: "created_at", label: "Date" },
-  { sortable: true, key: "actions", label: "Actions" },
+  { key: "actions", label: "Actions" },
 ];
 const page = ref(1);
 const pageCount = 5;
@@ -275,8 +285,13 @@ const fetchProducts = async () => {
         isClosable: true,
       });
     } else {
+      /* format date before */
+      data.map((product) => {
+        product.created_at = formatDate(product.created_at);
+        product.size = formatCurrency(product.price);
+      });
       store.product = data;
-      // console.log("data", data);
+      console.log("data", data);
     }
   } catch (error) {
     // toast.add({
@@ -293,40 +308,128 @@ const fetchProducts = async () => {
 const rows = computed(() => {
   return store.product.slice((page.value - 1) * pageCount, page.value * pageCount);
 });
+const handleEdit = (row) => {
+  let product = {
+    id: row.id,
+    title: row.title,
+    price: row.price,
+    url: row.url,
+    desc: row.description,
+  };
+  store.productData.id = product.id;
+  store.productData.name = product.title;
+  store.productData.size = product.price;
+  store.productData.url = product.url;
+  store.productData.desc = product.desc;
+  if (store.productData !== null) {
+    store.isEditing = true;
+    store.showModal = true;
+  }
+};
+const editProductToSupaBase = async () => {
+  store.isEditing = true;
+  store.isLoading = true;
+  const { data, error } = await client
+    .from("Products")
+    .update({
+      title: store.productData.name,
+      price: store.productData.size,
+      url: store.productData.url,
+      description: store.productData.desc,
+    })
+    .eq("id", store.productData.id);
+  if (error) {
+    store.isLoading = false;
+    store.isEditing = false;
+    store.showModal = false;
+    console.log(error);
+  } else {
+    store.isLoading = false;
+    store.showModal = false;
+    toast.add({
+      title: "Product Updated",
+      description: "Product Updated Successfully",
+      status: "success",
+      duration: 5000,
+      isClosable: true,
+    });
+    store.productData.name = "";
+    store.productData.size = "";
+    store.productData.url = "";
+    store.productData.desc = "";
+    store.isEditing = false;
+    await fetchProducts();
+  }
+};
+const handleDelete = (row) => {
+  store.selected = [row];
+  store.isDeleting = true;
+  deleteProductFromSupaBase(row);
+};
+const handleView = (row) => {
+  store.selected = [row];
+  store.isViewProduct = true;
+  console.log("selected", store.selected);
+};
+const deleteProductFromSupaBase = async (row) => {
+  try {
+    const { data, error } = await client.from("Products").delete().eq("id", row.id);
+    if (error) {
+      store.isDeleting = false;
+      console.log(error);
+    } else {
+      store.isDeleting = false;
+      toast.add({
+        title: "Products Deleted",
+        description: "Products Deleted Successfully",
+        status: "success",
+        duration: 5000,
+        isClosable: true,
+      });
+      await fetchProducts();
+    }
+  } catch (error) {
+    store.isDeleting = false;
+
+    toast.add({
+      title: "Error",
+      description: "Error Deleting Product",
+      status: "error",
+      duration: 5000,
+      isClosable: true,
+    });
+  }
+};
 
 const items = (row) => [
   [
     {
       label: "Edit",
       icon: "i-heroicons-pencil-square-20-solid",
-      click: () => console.log("Edit", row.id),
-    },
-    {
-      label: "Duplicate",
-      icon: "i-heroicons-document-duplicate-20-solid",
+      click: () => handleEdit(row),
     },
   ],
-  [
-    {
-      label: "Archive",
-      icon: "i-heroicons-archive-box-20-solid",
-    },
-    {
-      label: "Move",
-      icon: "i-heroicons-arrow-right-circle-20-solid",
-    },
-  ],
+
   [
     {
       label: "Delete",
       icon: "i-heroicons-trash-20-solid",
+      click: () => handleDelete(row),
+    },
+  ],
+  [
+    {
+      label: "View",
+      icon: "i-heroicons-eye-20-solid",
+      click: () => handleView(row),
     },
   ],
 ];
-fetchProducts();
+
 const openModal = () => {
   store.showModal = true;
 };
+fetchProducts();
 </script>
 
 <template>
@@ -381,6 +484,10 @@ const openModal = () => {
 
     <main>
       <div class="" v-show="manageProducts">
+        <ProductSlider
+          :isViewProduct="store.isViewProduct"
+          :selected-product="store.selected[0]"
+        />
         <div>
           <div class="" v-show="store.showResetModal">
             <reset_Password />
@@ -391,12 +498,14 @@ const openModal = () => {
               v-if="store.showModal"
               class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-40"
             >
-              <div class="bg-gray-950 z-20 rounded-lg p-8 max-w-2xl w-full">
+              <div
+                class="bg-gray-950 z-20 rounded-lg p-8 max-w-2xl w-full overflow-y-auto"
+              >
                 <h2 class="text-2xl font-bold mb-4">
-                  {{ store.isSaving ? "Edit product" : "Add Product" }}
+                  {{ store.isEditing ? "Edit product" : "Add Product" }}
                 </h2>
-                <form @submit.prevent="addProductToSupaBase">
-                  <div class="mb-4">
+                <form>
+                  <div class="mb-4 overflow-y-auto">
                     <label for="name" class="block text-white">Name:</label>
                     <UInput
                       v-model="store.productData.name"
@@ -417,7 +526,20 @@ const openModal = () => {
                     />
                   </div>
                   <div class="mb-4 mt-2">
+                    <div
+                      class="text-white"
+                      v-if="store.productData.url && store.isEditing"
+                    >
+                      <h3>Current image</h3>
+                      <NuxtImg
+                        v-if="store.productData.url && store.isEditing"
+                        :src="store.productData.url"
+                        class="w-20 h-20 rounded-full mx-auto"
+                      />
+                    </div>
                     <label for="File" class="block text-white">Select File:</label>
+                    <!-- if not during edit please add another -->
+
                     <CloudUpload @uploaded="handleUrl" />
                   </div>
 
@@ -437,6 +559,8 @@ const openModal = () => {
                     class="flex md:flex-row flex-col mx-auto justify-center gap-y-2 items-center md:justify-start w-full flex-1 max-w-xl gap-x-2"
                   >
                     <UButton
+                      v-if="!store.isEditing"
+                      @click.prevent="addProductToSupaBase"
                       type="submit"
                       class="text-white px-6 md:w-1/2 text-center py-3 w-full align-middle"
                       color="green"
@@ -445,7 +569,21 @@ const openModal = () => {
                       :loading="store.isSaving"
                     >
                       <p class="text-center">
-                        {{ store.isSaving ? "Save Changes" : "Add" }}
+                        {{ store.isSaving ? "Save Changes" : "Add Product" }}
+                      </p>
+                    </UButton>
+                    <UButton
+                      v-if="store.isEditing"
+                      @click.prevent="editProductToSupaBase"
+                      type="submit"
+                      class="text-white px-6 md:w-1/2 text-center py-3 w-full align-middle"
+                      color="green"
+                      variant="solid"
+                      :disabled="store.isLoading"
+                      :loading="store.isLoading"
+                    >
+                      <p class="text-center">
+                        {{ store.isEditing ? "Editing..." : "Edit product" }}
                       </p>
                     </UButton>
                     <UButton
@@ -490,7 +628,7 @@ const openModal = () => {
                   /></ClientOnly>
                 </UButton>
               </div>
-              <div v-if="store.searching" class="overflow-x-auto">
+              <div v-if="store.searching" class="overflow-x-auto px-7">
                 <div class="sm:-mx-6 lg:-mx-8">
                   <div class="inline-block min-w-full sm:px-6 lg:px-8">
                     <UTable
@@ -558,7 +696,7 @@ const openModal = () => {
                 </div>
               </div>
 
-              <div class="overflow-x-auto" v-if="!store.searching">
+              <div class="overflow-x-auto px-7" v-if="!store.searching">
                 <div class="mt-4 bg-gray-900 sm:-mx-6 lg:-mx-8">
                   <UTable
                     v-model="store.selected"
@@ -618,13 +756,19 @@ const openModal = () => {
               </div>
 
               <!-- selected show -->
-              <Selected
+              <!-- <Selected
                 :selected="store.selected"
                 :product="store.product"
                 @productUrl="cloudinaryUrl($event)"
-              />
+              /> -->
             </div>
           </div>
+        </div>
+        <div class="flex justify-center items-center">
+          <p class="text-gray-400 text-sm">
+            &copy; 2023 <span class="text-blue-500">AceShoes</span
+            ><span class="text-green-500">Technologies</span>
+          </p>
         </div>
       </div>
       <div class="" v-show="analytics">
