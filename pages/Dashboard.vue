@@ -628,11 +628,11 @@ fetchProducts();
                   /></ClientOnly>
                 </UButton>
               </div>
-              <div v-if="store.searching" class="overflow-x-auto px-7">
-                <div class="sm:-mx-6 lg:-mx-8">
+              <div v-if="store.searching" class="overflow-x-auto px-7 bg-black">
+                <div class="sm:-mx-6 lg:-mx-8 bg-black">
                   <div class="inline-block min-w-full sm:px-6 lg:px-8">
                     <UTable
-                      class="mt-4 bg-gray-900"
+                      class="mt-4"
                       v-model="store.selected"
                       :rows="filteredRows"
                       :columns="columns"
@@ -696,8 +696,8 @@ fetchProducts();
                 </div>
               </div>
 
-              <div class="overflow-x-auto px-7" v-if="!store.searching">
-                <div class="mt-4 bg-gray-900 sm:-mx-6 lg:-mx-8">
+              <div class="overflow-x-auto px-7 bg-black" v-if="!store.searching">
+                <div class="mt-4 bg-black sm:-mx-6 lg:-mx-8">
                   <UTable
                     v-model="store.selected"
                     :rows="rows"
