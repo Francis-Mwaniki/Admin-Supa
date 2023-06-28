@@ -1,13 +1,12 @@
 <template>
-  <Content title="Home" />
+  <Trend />
 </template>
 
 <script>
-import Content from '../components/Content.vue'
-
+import Trend from "~/components/Analytics/Trend.vue";
 export default {
   components: {
-    Content,
+    Trend,
   },
-}
+};
 </script>

@@ -584,7 +584,7 @@ fetchProducts();
                       :loading="store.isLoading"
                     >
                       <p class="text-center">
-                        {{ store.isEditing ? "Editing..." : "Edit product" }}
+                        {{ store.isEditing ? "Editing" : "Edit product" }}
                       </p>
                     </UButton>
                     <UButton
