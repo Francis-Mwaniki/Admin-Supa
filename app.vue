@@ -1,14 +1,11 @@
 <template>
-  <div class="min-h-screen bg-gray-950 text-white">
-    <UContainer>
-      <NuxtPage />
-    </UContainer>
-
-    <UNotifications />
-  </div>
+  <dashboard-layout>
+    <NuxtPage />
+  </dashboard-layout>
 </template>
 
 <script setup>
+import DashboardLayout from "./components/dashboard/Layout.vue";
 const { account, ID } = useAppwrite();
 const phone = ref("");
 const otp = ref("");

@@ -42,14 +42,14 @@ partytown: {
 css: ["~/assets/css/tailwind.css","~/assets/css/root.css"],
 
 
-plugins: [
- {
-  src: '~/plugins/apexcharts.ts',
-  mode: 'client'
- }
+// plugins: [
+//  {
+//   src: '~/plugins/apexcharts.ts',
+//   mode: 'client'
+//  }
   
 
-]
+// ]
 
 // .eslintrc
 

@@ -1,5 +1,5 @@
 <script setup>
-import { userStore } from "~/store/user";
+import { userStore } from "@/store/user.js";
 
 const user = useSupabaseUser();
 const AppwriteUser = useAppwrite();
