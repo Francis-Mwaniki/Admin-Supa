@@ -1,6 +1,10 @@
 <template>
   <dashboard-layout>
-    <NuxtPage />
+    <UContainer>
+      <NuxtPage />
+    </UContainer>
+
+    <UNotifications />
   </dashboard-layout>
 </template>
 

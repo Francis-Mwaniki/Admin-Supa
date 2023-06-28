@@ -1,5 +1,5 @@
 <template>
-  <div class="container mx-auto py-8 bg-gray-950 text-white">
+  <!-- <div class="container mx-auto py-8 bg-gray-950 text-white">
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
       <div
         v-for="(product, index) in selected"
@@ -34,7 +34,7 @@
         </div>
       </div>
     </div>
-    <!-- Add/Edit product Popup -->
+  
     <div
       v-if="showPopup"
       class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50"
@@ -96,8 +96,8 @@
         </form>
       </div>
     </div>
-    <!-- <LoadingComp :isLoading="isLoading" /> -->
-  </div>
+
+  </div> -->
 </template>
 
 <script>
@@ -105,16 +105,16 @@ import LoadingComp from "~/components/LoadingComp.vue";
 import CloudUpload from "~/components/CloudUpload.vue";
 import axios from "axios";
 export default {
-  props: {
-    selected: {
-      type: Array,
-      required: true,
-    },
-    product: {
-      type: Array,
-      required: true,
-    },
-  },
+  // props: {
+  //   selected: {
+  //     type: Array,
+  //     required: true,
+  //   },
+  //   product: {
+  //     type: Array,
+  //     required: true,
+  //   },
+  // },
   components: {
     LoadingComp,
     CloudUpload,
