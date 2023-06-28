@@ -18,6 +18,7 @@ const store = userStore();
 const manageProducts = ref(true);
 const isOpen = ref(false);
 const analytics = ref(false);
+const toast = useToast();
 
 function formatDate(date) {
   return date ? moment(date).format("MMMM Do YYYY, h:mm:ss a") : "Never";
@@ -52,11 +53,11 @@ onMounted(async () => {
 });
 watch([AppwriteUser, user], () => {
   if (AppwriteUser.value !== null) {
-    navigateTo("/Dashboard");
+    navigateTo("/admin/ManageProducts");
   } else if (user.value !== null) {
-    navigateTo("/Dashboard");
+    navigateTo("/admin/ManageProducts");
   } else {
-    navigateTo("/Login");
+    navigateTo("/");
   }
 });
 // });
@@ -258,7 +259,7 @@ watch(q, (value) => {
     });
   }
 });
-const toast = useToast();
+
 const columns = [
   // {  sortable: true, key: "image", label: "Image" },
   { sortable: true, key: "id", label: "id" },
@@ -496,7 +497,7 @@ fetchProducts();
             <div class="flex justify-end items-end py-2"><Admin /></div>
             <div
               v-if="store.showModal"
-              class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-40"
+              class="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-50 z-40"
             >
               <div
                 class="bg-gray-950 z-20 rounded-lg p-8 max-w-2xl w-full overflow-y-auto"
@@ -511,7 +512,7 @@ fetchProducts();
                       v-model="store.productData.name"
                       type="text"
                       id="name"
-                      class="bg-gray-200 text-black border border-gray-300 rounded px-3 py-2 w-full"
+                      class="bg-gray-200 text-gray-800 border border-gray-300 rounded px-3 py-2 w-full"
                       required
                     />
                   </div>
@@ -521,7 +522,7 @@ fetchProducts();
                       v-model="store.productData.size"
                       type="number"
                       id="size"
-                      class="bg-gray-200 text-black border border-gray-300 rounded px-3 py-2 w-full"
+                      class="bg-gray-200 text-gray-800 border border-gray-300 rounded px-3 py-2 w-full"
                       required
                     />
                   </div>
@@ -550,7 +551,7 @@ fetchProducts();
                       type="desc"
                       id="desc"
                       rows="3"
-                      class="bg-gray-200 text-black border border-gray-300 rounded px-3 py-2 w-full"
+                      class="bg-gray-200 text-gray-800 border border-gray-300 rounded px-3 py-2 w-full"
                       required
                     />
                   </div>
@@ -599,7 +600,7 @@ fetchProducts();
 
             <div class="max-w-6xl mx-auto py-4">
               <div
-                class="mx-auto flex flex-row gap-x-4 md:gap-y-1 gap-y-3 space-x-2 flex-grow flex-wrap"
+                class="mx-auto flex flex-row gap-x-4 md:gap-y-1 gap-y-3 space-x-2 flex-grow flex-wrap mb-2"
               >
                 <UInput v-model="q" placeholder="Filter products..." />
                 <UButton
@@ -628,8 +629,8 @@ fetchProducts();
                   /></ClientOnly>
                 </UButton>
               </div>
-              <div v-if="store.searching" class="overflow-x-auto px-7 bg-black">
-                <div class="sm:-mx-6 lg:-mx-8 bg-black">
+              <div v-if="store.searching" class="overflow-x-auto px-7 bg-gray-800">
+                <div class="sm:-mx-6 lg:-mx-8 bg-gray-800">
                   <div class="inline-block min-w-full sm:px-6 lg:px-8">
                     <UTable
                       class="mt-4"
@@ -696,8 +697,8 @@ fetchProducts();
                 </div>
               </div>
 
-              <div class="overflow-x-auto px-7 bg-black" v-if="!store.searching">
-                <div class="mt-4 bg-black sm:-mx-6 lg:-mx-8">
+              <div class="overflow-x-auto px-7 bg-gray-800" v-if="!store.searching">
+                <div class="mt-4 bg-gray-800 sm:-mx-6 lg:-mx-8">
                   <UTable
                     v-model="store.selected"
                     :rows="rows"
