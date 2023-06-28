@@ -436,15 +436,15 @@ fetchProducts();
 <template>
   <main>
     <div>
-      <UButton label="Open" class="my-4" @click="isOpen = true">
-        <!-- Switch <Icon name../> to menu or close -->
+      <!-- <UButton label="Open" class="my-4" @click="isOpen = true">
+       
         <Icon
           name="material-symbols:menu-rounded"
           class="h-6 w-6 text-white"
           v-if="!isOpen"
         />
         <Icon name="ic:round-close" class="h-6 w-6 text-white" v-if="isOpen" />
-      </UButton>
+      </UButton> -->
 
       <USlideover v-model="isOpen">
         <!-- switch between Analytics and Admin menu-->
