@@ -125,16 +125,36 @@ const addProductToSupaBase = async () => {
   }
   store.isSaving = true;
   console.log("store.productData", store.productData);
-  const { data, error } = await client.from("Products").insert([
-    {
-      title: store.productData.name,
-      price: store.productData.size,
-      description: store.productData.desc,
-      url: store.productData.url,
-    },
-  ]);
+  const url = `https://acewears.onrender.com/product`;
+  const token =
+    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiRnJhbmNpcyBNd2FuaWtpIiwiaWQiOjcsImlhdCI6MTY4OTc4ODEzMywiZXhwIjoxNjg5ODc0NTMzfQ.qJc-8zo-M5sDQdHSVVV8yH4QlnnTjBqE0xPAh0wEQCc";
 
-  if (error) {
+  let newData = {
+    title: store.productData.name,
+    description: store.productData.desc,
+    price: parseInt(store.productData.size),
+    categoryType: "SHOES",
+    category: "WATCHES",
+    image: [{ url: store.productData.url }],
+  };
+  let resp = await fetch(url, {
+    method: "POST",
+    headers: {
+      Authorization: `Bearer ${token}`,
+      "content-type": "application/json",
+    },
+    body: JSON.stringify(newData),
+    /* {
+      title: store.productData.name,
+      description: store.productData.desc,
+      price: 1,
+      categoryType: "SHOES",
+      image: [{ url: store.productData.url }],
+    }*/
+  });
+  console.log("resp", resp);
+
+  if (!resp) {
     store.isSaving = false;
     toast.add({
       title: "Error",
@@ -145,6 +165,8 @@ const addProductToSupaBase = async () => {
     });
     console.log(error);
   } else {
+    const data = await resp.json();
+    console.log("data", data);
     store.isSaving = false;
     toast.add({
       title: "Product Added",
@@ -271,13 +293,17 @@ const columns = [
 const page = ref(1);
 const pageCount = 5;
 const fetchProducts = async () => {
-  const { data, error } = await client
-    .from("Products")
-    .select("*")
-    .order("created_at", { ascending: false });
+  const url = "https://acewears.onrender.com/product/";
   //.range(page, pageCount);
   try {
-    if (error) {
+    let resp = await fetch(url, {
+      method: "GET",
+      headers: {
+        "content-type": "application/json",
+      },
+    });
+    if (!resp) {
+      console.log("err from fetching", data);
       toast.add({
         title: "Huh!",
         description: "Check your Internet!",
@@ -286,11 +312,13 @@ const fetchProducts = async () => {
         isClosable: true,
       });
     } else {
+      const data = await resp.json();
       /* format date before */
-      data.map((product) => {
-        product.created_at = formatDate(product.created_at);
-        product.size = formatCurrency(product.price);
-      });
+      // data.map((product) => {
+      //   product.created_at = formatDate(product.created_at);
+      //   product.size = formatCurrency(product.price);
+      // });
+      console.log("data", data);
       store.product = data;
       console.log("data", data);
     }
@@ -330,21 +358,53 @@ const handleEdit = (row) => {
 const editProductToSupaBase = async () => {
   store.isEditing = true;
   store.isLoading = true;
-  const { data, error } = await client
-    .from("Products")
-    .update({
+  if (store.productData.id === null) {
+    toast.add({
+      title: "Error",
+      description: "Please select a product",
+      status: "error",
+      duration: 5000,
+      isClosable: true,
+    });
+    return;
+  }
+  const url = `https://acewears.onrender.com/product/${store.productData.id}/`;
+  const token =
+    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiRnJhbmNpcyBNd2FuaWtpIiwiaWQiOjcsImlhdCI6MTY4OTc4ODEzMywiZXhwIjoxNjg5ODc0NTMzfQ.qJc-8zo-M5sDQdHSVVV8yH4QlnnTjBqE0xPAh0wEQCc";
+
+  let newData = {
+    title: store.productData.name,
+    description: store.productData.desc,
+    price: parseInt(store.productData.size),
+    categoryType: "SHOES",
+    category: "WATCHES",
+    image: [{ url: store.productData.url }],
+  };
+  let resp = await fetch(url, {
+    method: "PUT",
+    headers: {
+      Authorization: `Bearer ${token}`,
+      "content-type": "application/json",
+    },
+    body: JSON.stringify(newData),
+    /* {
       title: store.productData.name,
-      price: store.productData.size,
-      url: store.productData.url,
       description: store.productData.desc,
-    })
-    .eq("id", store.productData.id);
-  if (error) {
+      price: 1,
+      categoryType: "SHOES",
+      image: [{ url: store.productData.url }],
+    }*/
+  });
+  console.log("resp", resp);
+  if (!resp) {
+    const data = await resp.json();
     store.isLoading = false;
     store.isEditing = false;
     store.showModal = false;
-    console.log(error);
+    console.log("data", data);
   } else {
+    const data = await resp.json();
+    console.log("data", data);
     store.isLoading = false;
     store.showModal = false;
     toast.add({
@@ -374,11 +434,24 @@ const handleView = (row) => {
 };
 const deleteProductFromSupaBase = async (row) => {
   try {
-    const { data, error } = await client.from("Products").delete().eq("id", row.id);
-    if (error) {
+    const url = `https://acewears.onrender.com/product/${row.id}/`;
+    const token =
+      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiRnJhbmNpcyBNd2FuaWtpIiwiaWQiOjcsImlhdCI6MTY4OTc4ODEzMywiZXhwIjoxNjg5ODc0NTMzfQ.qJc-8zo-M5sDQdHSVVV8yH4QlnnTjBqE0xPAh0wEQCc";
+
+    let resp = await fetch(url, {
+      method: "DELETE",
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "content-type": "application/json",
+      },
+    });
+    if (!resp) {
+      console.log("err from fetching", data);
       store.isDeleting = false;
       console.log(error);
     } else {
+      const data = await resp.json();
+      console.log("data", data);
       store.isDeleting = false;
       toast.add({
         title: "Products Deleted",
@@ -463,7 +536,7 @@ fetchProducts();
               >Analytics</UButton
             >
             <UButton
-              class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-lg transition-colors duration-300 ease-in-out"
+              class="bg-[#ff4e09] hover:bg-[#ff4e09] text-white px-4 py-2 rounded-lg transition-colors duration-300 ease-in-out"
               @click="
                 manageProducts = true;
                 analytics = false;
@@ -477,7 +550,7 @@ fetchProducts();
         <div class="flex justify-center items-center">
           <p class="text-gray-400 text-sm">
             &copy; 2023 <span class="text-blue-500">AceShoes</span
-            ><span class="text-green-500">Technologies</span>
+            ><span class="text-orange-500">Technologies</span>
           </p>
         </div>
       </USlideover>
@@ -497,10 +570,10 @@ fetchProducts();
             <div class="flex justify-end items-end py-2"><Admin /></div>
             <div
               v-if="store.showModal"
-              class="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-50 z-40"
+              class="fixed inset-0 flex items-center justify-center bg-opacity-50 z-40"
             >
               <div
-                class="bg-gray-950 z-20 rounded-lg p-8 max-w-2xl w-full overflow-y-auto"
+                class="z-20 rounded-lg p-8 max-w-2xl w-full overflow-y-auto bg-gray-950"
               >
                 <h2 class="text-2xl font-bold mb-4">
                   {{ store.isEditing ? "Edit product" : "Add Product" }}
@@ -512,7 +585,7 @@ fetchProducts();
                       v-model="store.productData.name"
                       type="text"
                       id="name"
-                      class="bg-gray-200 text-gray-800 border border-gray-300 rounded px-3 py-2 w-full"
+                      class="rounded px-3 py-2 w-full"
                       required
                     />
                   </div>
@@ -522,7 +595,7 @@ fetchProducts();
                       v-model="store.productData.size"
                       type="number"
                       id="size"
-                      class="bg-gray-200 text-gray-800 border border-gray-300 rounded px-3 py-2 w-full"
+                      class="rounded px-3 py-2 w-full"
                       required
                     />
                   </div>
@@ -551,7 +624,7 @@ fetchProducts();
                       type="desc"
                       id="desc"
                       rows="3"
-                      class="bg-gray-200 text-gray-800 border border-gray-300 rounded px-3 py-2 w-full"
+                      class="rounded px-3 py-2 w-full"
                       required
                     />
                   </div>
@@ -564,7 +637,7 @@ fetchProducts();
                       @click.prevent="addProductToSupaBase"
                       type="submit"
                       class="text-white px-6 md:w-1/2 text-center py-3 w-full align-middle"
-                      color="green"
+                      color="orange"
                       variant="solid"
                       :disabled="store.isSaving"
                       :loading="store.isSaving"
@@ -578,7 +651,7 @@ fetchProducts();
                       @click.prevent="editProductToSupaBase"
                       type="submit"
                       class="text-white px-6 md:w-1/2 text-center py-3 w-full align-middle"
-                      color="green"
+                      color="orange"
                       variant="solid"
                       :disabled="store.isLoading"
                       :loading="store.isLoading"
@@ -606,7 +679,7 @@ fetchProducts();
                 <UButton
                   label="Add Product."
                   @click="store.showModal = true"
-                  class="focus:bg-green-400"
+                  class="focus:bg-[#ff4e09]"
                 >
                   <span>Add Product</span>
                   <ClientOnly><Icon name="ic:round-plus" class="h-6 w-6" /></ClientOnly>
@@ -614,7 +687,7 @@ fetchProducts();
                 <UButton
                   label="Delete Product."
                   @click="deleteSelectedProducts"
-                  :color="store.selected.length > 0 ? 'red' : 'green'"
+                  :color="store.selected.length > 0 ? 'red' : 'orange'"
                   :disabled="store.isDeleting"
                   :loading="store.isDeleting"
                 >
@@ -629,8 +702,8 @@ fetchProducts();
                   /></ClientOnly>
                 </UButton>
               </div>
-              <div v-if="store.searching" class="overflow-x-auto px-7 bg-gray-800">
-                <div class="sm:-mx-6 lg:-mx-8 bg-gray-800">
+              <div v-if="store.searching" class="overflow-x-auto px-7">
+                <div class="sm:-mx-6 lg:-mx-8">
                   <div class="inline-block min-w-full sm:px-6 lg:px-8">
                     <UTable
                       class="mt-4"
@@ -650,7 +723,11 @@ fetchProducts();
                       }"
                     >
                       <template #name-data="{ row }">
-                        <NuxtImg :src="row.url" class="h-14 w-14 rounded-full" alt="" />
+                        <NuxtImg
+                          :src="row.image?.url"
+                          class="h-14 w-14 rounded-full"
+                          alt=""
+                        />
                         <span
                           :class="[
                             store.selected.find((product) => product.id === row.id) &&
@@ -697,8 +774,8 @@ fetchProducts();
                 </div>
               </div>
 
-              <div class="overflow-x-auto px-7 bg-gray-800" v-if="!store.searching">
-                <div class="mt-4 bg-gray-800 sm:-mx-6 lg:-mx-8">
+              <div class="overflow-x-auto px-7" v-if="!store.searching">
+                <div class="mt-4 sm:-mx-6 lg:-mx-8">
                   <UTable
                     v-model="store.selected"
                     :rows="rows"
@@ -717,7 +794,11 @@ fetchProducts();
                   >
                     {{ store.selected }}
                     <template #name-data="{ row }">
-                      <NuxtImg :src="row.url" class="h-14 w-14 rounded-full" alt="" />
+                      <NuxtImg
+                        :src="row.image?.url"
+                        class="h-14 w-14 rounded-full"
+                        alt=""
+                      />
                       <span
                         :class="[
                           store.selected.find((product) => product.id === row.id) &&
@@ -768,7 +849,7 @@ fetchProducts();
         <div class="flex justify-center items-center">
           <p class="text-gray-400 text-sm">
             &copy; 2023 <span class="text-blue-500">AceShoes</span
-            ><span class="text-green-500">Technologies</span>
+            ><span class="text-orange-500">Technologies</span>
           </p>
         </div>
       </div>
@@ -787,3 +868,10 @@ fetchProducts();
     </main>
   </main>
 </template>
+<style>
+* {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(155, 155, 155, 0.5) transparent;
+  color: #ffffff;
+}
+</style>

@@ -1,9 +1,42 @@
-/* root css */
-body {
-  background-color: #fff;
-  color: #333;
-  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
-  font-size: 14px;
-  line-height: 1.42857;
-  margin: 0;
+
+
+
+:root{
+  --color: #000000;
+  --color-primary: #000000;
+  --color-secondary: #000000;
+  --bg: #f3f5f4;
+  --bg-secondary: #fdf9f3;
+  --background-color: #ffffff;
+  /* --border-color: #ddd; */
+  --bg-secondary: #ffffff;
+  --background-color: #ffffff;
+  /* --border-color: #747474; */
+  /* box-sizing: border-box; */
+  /* box-shadow: 0 0 0 1px var(--border-color); */
+
+
+
 }
+
+.light-mode {
+  --color: #000000;
+  --color-primary: #000000;
+  --color-secondary: #000000;
+  --bg: #f3f5f4;
+  --bg-secondary: #ffffff;
+  --background-color: #ffffff;
+  /* --border-color: #565656; */
+  /* box-sizing: border-box; */
+  /* box-shadow: 0 0 0 1px var(--border-color); */
+
+
+
+}
+
+
+
+
+
+
+
