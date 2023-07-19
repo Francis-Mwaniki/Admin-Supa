@@ -1,4 +1,4 @@
-import { mode } from "process";
+// import { mode } from "process";
 
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
@@ -7,7 +7,7 @@ export default defineNuxtConfig({
   '@nuxtjs/partytown',
   '@nuxt/image',
   "nuxt-appwrite",
-  'nuxt-delay-hydration',
+  // 'nuxt-delay-hydration',
   "nuxt-icon",
   "nuxt-lodash",
   '@nuxtjs/cloudinary',
@@ -22,10 +22,10 @@ appwrite: {
   endpoint: 'https://cloud.appwrite.io/v1',
   project: '6493f90468e18c956a76',
 },
-delayHydration: {
-  // enables nuxt-delay-hydration in dev mode for testing
-  debug: process.env.NODE_ENV === 'development'
-},
+// delayHydration: {
+//   // enables nuxt-delay-hydration in dev mode for testing
+//   debug: process.env.NODE_ENV === 'development'
+// },
 partytown: {
  
 },
