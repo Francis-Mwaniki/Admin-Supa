@@ -3,9 +3,12 @@
 <template>
   <!-- <div class="bg-opacity-60 bg-black relative" /> -->
   <div
+
     class="flex justify-center items-center inset-0 h-full w-full fixed z-40 bg-gray-950 min-w-full overflow-auto"
     :class="{ 'pt-64 pb-2 sm:pt-3': isRegister, 'pt-0 sm:pt-3': isLogin }"
+
   >
+
     <UModal v-model="isRegister" v-if="isRegister">
       <form
         v-if="isRegister"
@@ -73,6 +76,7 @@
           />
         </div>
 
+
         <div class="flex">
           <button
             type="submit"
@@ -104,6 +108,7 @@
         <h2 class="text-2xl mb-4">Login</h2>
         <!-- NAME -->
 
+
         <div class="mb-4">
           <label for="email" class="block mb-2 text-white">Email</label>
           <input
@@ -122,6 +127,7 @@
             class="w-full border px-4 py-2 rounded dark:text-white dark:bg-gray-800"
           />
         </div>
+
 
         <div class="flex">
           <button
