@@ -102,7 +102,7 @@
             </svg>
           </a>
           <a href="#" class="block relative">
-            <Icon name="ph:user-circle" class="h-6 w-6" />
+            <Icon name="ph:user" class="h-6 w-6" />
           </a>
         </div>
       </div>
