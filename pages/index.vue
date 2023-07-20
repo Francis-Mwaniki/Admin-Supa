@@ -6,137 +6,145 @@
     class="flex justify-center items-center inset-0 h-full w-full fixed z-40 bg-gray-950 min-w-full overflow-auto"
     :class="{ 'pt-64 pb-2 sm:pt-3': isRegister, 'pt-0 sm:pt-3': isLogin }"
   >
-    <form
-      v-if="isRegister"
-      @submit.prevent="registerUser"
-      class="sm:w-1/2 p-8 bg-gray-900 rounded shadow-lg transition-all duration-500 transform w-full overflow-auto"
-    >
-      <h2 class="text-2xl mb-4">Register</h2>
-      <!-- NAME -->
-      <div class="mb-4">
-        <label for="name" class="block mb-2 text-white">Name</label>
-        <input
-          type="text"
-          id="name"
-          v-model="name"
-          class="w-full border px-4 py-2 rounded dark:text-white dark:bg-gray-800"
-        />
-      </div>
+    <UModal v-model="isRegister" v-if="isRegister">
+      <form
+        v-if="isRegister"
+        @submit.prevent="registerUser"
+        class="sm:w-full p-8 bg-gray-900 rounded shadow-lg transition-all duration-500 transform w-full overflow-auto"
+      >
+        <h2 class="text-2xl mb-4">Register</h2>
+        <!-- NAME -->
+        <div class="mb-4">
+          <label for="name" class="block mb-2 text-white">Name</label>
+          <input
+            type="text"
+            id="name"
+            v-model="name"
+            class="w-full border px-4 py-2 rounded dark:text-white dark:bg-gray-800"
+          />
+        </div>
 
-      <div class="mb-4">
-        <label for="email" class="block mb-2 text-white">Email</label>
-        <input
-          type="email"
-          id="email"
-          v-model="email"
-          class="w-full border px-4 py-2 rounded dark:text-white dark:bg-gray-800"
-        />
-      </div>
-      <div class="mb-4">
-        <label for="password" class="block mb-2 text-white">Password</label>
-        <input
-          type="password"
-          v-model="password"
-          id="password"
-          class="w-full border px-4 py-2 rounded dark:text-white dark:bg-gray-800"
-        />
-      </div>
-      <div class="mb-4">
-        <label for="confirmPassword" class="block mb-2 text-white">ConfirmPassword</label>
-        <input
-          type="password"
-          v-model="confirmPassword"
-          id="confirmPassword"
-          class="w-full border px-4 py-2 rounded dark:text-white dark:bg-gray-800"
-        />
-      </div>
-      <div class="mb-4">
-        <label for="productKey" class="block mb-2 text-white">Product Key</label>
-        <input
-          type="text"
-          v-model="productKey"
-          id="productKey"
-          class="w-full border px-4 py-2 rounded dark:text-white dark:bg-gray-800"
-        />
-      </div>
-      <!-- phone -->
-      <div class="mb-4">
-        <label for="phone" class="block mb-2 text-white">Phone</label>
-        <input
-          type="text"
-          v-model="phone"
-          id="phone"
-          class="w-full border px-4 py-2 rounded dark:text-white dark:bg-gray-800"
-        />
-      </div>
+        <div class="mb-4">
+          <label for="email" class="block mb-2 text-white">Email</label>
+          <input
+            type="email"
+            id="email"
+            v-model="email"
+            class="w-full border px-4 py-2 rounded dark:text-white dark:bg-gray-800"
+          />
+        </div>
+        <div class="mb-4">
+          <label for="password" class="block mb-2 text-white">Password</label>
+          <input
+            type="password"
+            v-model="password"
+            id="password"
+            class="w-full border px-4 py-2 rounded dark:text-white dark:bg-gray-800"
+          />
+        </div>
+        <div class="mb-4">
+          <label for="confirmPassword" class="block mb-2 text-white"
+            >ConfirmPassword</label
+          >
+          <input
+            type="password"
+            v-model="confirmPassword"
+            id="confirmPassword"
+            class="w-full border px-4 py-2 rounded dark:text-white dark:bg-gray-800"
+          />
+        </div>
+        <div class="mb-4">
+          <label for="productKey" class="block mb-2 text-white">Product Key</label>
+          <input
+            type="text"
+            v-model="productKey"
+            id="productKey"
+            class="w-full border px-4 py-2 rounded dark:text-white dark:bg-gray-800"
+          />
+        </div>
+        <!-- phone -->
+        <div class="mb-4">
+          <label for="phone" class="block mb-2 text-white">Phone</label>
+          <input
+            type="text"
+            v-model="phone"
+            id="phone"
+            class="w-full border px-4 py-2 rounded dark:text-white dark:bg-gray-800"
+          />
+        </div>
 
-      <div class="flex">
-        <button
-          type="submit"
-          class="inline-flex items-center focus:outline-none mr-4 bg-[#ff4e09] text-white py-2 px-4 rounded"
-          :disabled="isRegistering"
-          :loading="isRegistering"
-        >
-          <Icon name="eos-icons:bubble-loading" class="h-8 w-8" v-if="isRegistering" />
-          {{ isRegistering ? "processing" : "Signup" }}
-        </button>
-      </div>
-      <!-- dont have an account -->
-      <div class="flex justify-end">
-        <p class="text-gray-400">
-          Already have an account?
-          <span class="text-blue-500 cursor-pointer" @click="goTo('Login')"> Login </span>
-        </p>
-      </div>
-    </form>
-    <form
-      v-if="isLogin"
-      @submit.prevent="loginUser"
-      class="sm:w-1/3 p-8 bg-gray-900 rounded shadow-lg transition-all duration-500 transform w-full overflow-auto"
-    >
-      <h2 class="text-2xl mb-4">Login</h2>
-      <!-- NAME -->
+        <div class="flex">
+          <button
+            type="submit"
+            class="inline-flex items-center focus:outline-none mr-4 bg-[#ff4e09] text-white py-2 px-4 rounded"
+            :disabled="isRegistering"
+            :loading="isRegistering"
+          >
+            <Icon name="eos-icons:bubble-loading" class="h-8 w-8" v-if="isRegistering" />
+            {{ isRegistering ? "processing" : "Signup" }}
+          </button>
+        </div>
+        <!-- dont have an account -->
+        <div class="flex justify-end">
+          <p class="text-gray-400">
+            Already have an account?
+            <span class="text-blue-500 cursor-pointer" @click="goTo('Login')">
+              Login
+            </span>
+          </p>
+        </div>
+      </form>
+    </UModal>
+    <UModal v-model="isLogin" v-if="isLogin">
+      <form
+        v-if="isLogin"
+        @submit.prevent="loginUser"
+        class="sm:w-full p-8 bg-gray-900 rounded shadow-lg transition-all duration-500 transform w-full overflow-auto"
+      >
+        <h2 class="text-2xl mb-4">Login</h2>
+        <!-- NAME -->
 
-      <div class="mb-4">
-        <label for="email" class="block mb-2 text-white">Email</label>
-        <input
-          type="email"
-          id="email"
-          v-model="email"
-          class="w-full border px-4 py-2 rounded dark:text-white dark:bg-gray-800"
-        />
-      </div>
-      <div class="mb-4">
-        <label for="password" class="block mb-2 text-white">Password</label>
-        <input
-          type="password"
-          v-model="password"
-          id="password"
-          class="w-full border px-4 py-2 rounded dark:text-white dark:bg-gray-800"
-        />
-      </div>
+        <div class="mb-4">
+          <label for="email" class="block mb-2 text-white">Email</label>
+          <input
+            type="email"
+            id="email"
+            v-model="email"
+            class="w-full border px-4 py-2 rounded dark:text-white dark:bg-gray-800"
+          />
+        </div>
+        <div class="mb-4">
+          <label for="password" class="block mb-2 text-white">Password</label>
+          <input
+            type="password"
+            v-model="password"
+            id="password"
+            class="w-full border px-4 py-2 rounded dark:text-white dark:bg-gray-800"
+          />
+        </div>
 
-      <div class="flex">
-        <button
-          type="submit"
-          :disabled="isLogging"
-          class="inline-flex items-center focus:outline-none mr-4 bg-[#ff4e09] text-white py-2 px-4 rounded"
-          :loading="isLogging"
-        >
-          <Icon name="eos-icons:bubble-loading" class="h-8 w-8" v-if="isLogging" />
-          {{ isLogging ? "processing" : "login" }}
-        </button>
-      </div>
-      <!-- dont have an account -->
-      <div class="flex justify-end">
-        <p class="text-gray-400">
-          Don't have an account?
-          <span class="text-blue-500 cursor-pointer" @click="goTo('Register')">
-            Register
-          </span>
-        </p>
-      </div>
-    </form>
+        <div class="flex">
+          <button
+            type="submit"
+            :disabled="isLogging"
+            class="inline-flex items-center focus:outline-none mr-4 bg-[#ff4e09] text-white py-2 px-4 rounded"
+            :loading="isLogging"
+          >
+            <Icon name="eos-icons:bubble-loading" class="h-8 w-8" v-if="isLogging" />
+            {{ isLogging ? "processing" : "login" }}
+          </button>
+        </div>
+        <!-- dont have an account -->
+        <div class="flex justify-end">
+          <p class="text-gray-400">
+            Don't have an account?
+            <span class="text-blue-500 cursor-pointer" @click="goTo('Register')">
+              Register
+            </span>
+          </p>
+        </div>
+      </form>
+    </UModal>
   </div>
 </template>
 

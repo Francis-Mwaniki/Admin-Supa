@@ -578,10 +578,11 @@ fetchProducts();
           </div>
           <div class="" v-if="!store.showResetModal">
             <div class="flex justify-end items-end py-2"><Admin /></div>
-            <div
+            <!-- <div
               v-if="store.showModal"
               class="fixed inset-0 flex items-center justify-center bg-opacity-50 z-40"
-            >
+            > -->
+            <UModal v-model="store.showModal" v-if="store.showModal">
               <div
                 class="z-20 rounded-lg p-8 max-w-2xl w-full overflow-y-auto bg-gray-950"
               >
@@ -696,7 +697,7 @@ fetchProducts();
                   </div>
                 </form>
               </div>
-            </div>
+            </UModal>
 
             <div class="max-w-6xl mx-auto py-4">
               <div
