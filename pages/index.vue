@@ -4,7 +4,7 @@
   <!-- <div class="bg-opacity-60 bg-black relative" /> -->
   <div
     class="flex justify-center items-center inset-0 h-full w-full fixed z-40 bg-gray-950 sm:min-h-screen min-w-full overflow-auto"
-    :class="{ 'pt-56 sm:pt-3': isRegister, 'pt-0 sm:pt-3': isLogin }"
+    :class="{ 'pt-56 sm:pt-3': isRegister, 'pt-1 sm:pt-3': isLogin }"
   >
     <form
       v-if="isRegister"
@@ -14,59 +14,59 @@
       <h2 class="text-2xl mb-4">Register</h2>
       <!-- NAME -->
       <div class="mb-4">
-        <label for="name" class="block mb-2 text-white">Name</label>
+        <label for="name" class="block mb-2">Name</label>
         <input
           type="text"
           id="name"
           v-model="name"
-          class="w-full border px-4 py-2 rounded dark:text-white dark:bg-gray-800"
+          class="w-full border px-4 py-2 rounded"
         />
       </div>
 
       <div class="mb-4">
-        <label for="email" class="block mb-2 text-white">Email</label>
+        <label for="email" class="block mb-2">Email</label>
         <input
           type="email"
           id="email"
           v-model="email"
-          class="w-full border px-4 py-2 rounded dark:text-white dark:bg-gray-800"
+          class="w-full border px-4 py-2 rounded"
         />
       </div>
       <div class="mb-4">
-        <label for="password" class="block mb-2 text-white">Password</label>
+        <label for="password" class="block mb-2">Password</label>
         <input
           type="password"
           v-model="password"
           id="password"
-          class="w-full border px-4 py-2 rounded dark:text-white dark:bg-gray-800"
+          class="w-full border px-4 py-2 rounded"
         />
       </div>
       <div class="mb-4">
-        <label for="confirmPassword" class="block mb-2 text-white">ConfirmPassword</label>
+        <label for="confirmPassword" class="block mb-2">ConfirmPassword</label>
         <input
           type="password"
           v-model="confirmPassword"
           id="confirmPassword"
-          class="w-full border px-4 py-2 rounded dark:text-white dark:bg-gray-800"
+          class="w-full border px-4 py-2 rounded"
         />
       </div>
       <div class="mb-4">
-        <label for="productKey" class="block mb-2 text-white">Product Key</label>
+        <label for="productKey" class="block mb-2">Product Key</label>
         <input
           type="text"
           v-model="productKey"
           id="productKey"
-          class="w-full border px-4 py-2 rounded dark:text-white dark:bg-gray-800"
+          class="w-full border px-4 py-2 rounded"
         />
       </div>
       <!-- phone -->
       <div class="mb-4">
-        <label for="phone" class="block mb-2 text-white">Phone</label>
+        <label for="phone" class="block mb-2">Phone</label>
         <input
           type="text"
           v-model="phone"
           id="phone"
-          class="w-full border px-4 py-2 rounded dark:text-white dark:bg-gray-800"
+          class="w-full border px-4 py-2 rounded"
         />
       </div>
 
@@ -98,21 +98,21 @@
       <!-- NAME -->
 
       <div class="mb-4">
-        <label for="email" class="block mb-2 text-white">Email</label>
+        <label for="email" class="block mb-2">Email</label>
         <input
           type="email"
           id="email"
           v-model="email"
-          class="w-full border px-4 py-2 rounded dark:text-white dark:bg-gray-800"
+          class="w-full border px-4 py-2 rounded"
         />
       </div>
       <div class="mb-4">
-        <label for="password" class="block mb-2 text-white">Password</label>
+        <label for="password" class="block mb-2">Password</label>
         <input
           type="password"
           v-model="password"
           id="password"
-          class="w-full border px-4 py-2 rounded dark:text-white dark:bg-gray-800"
+          class="w-full border px-4 py-2 rounded"
         />
       </div>
 
