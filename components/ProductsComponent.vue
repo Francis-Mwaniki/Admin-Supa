@@ -19,7 +19,20 @@ const manageProducts = ref(true);
 const isOpen = ref(false);
 const analytics = ref(false);
 const toast = useToast();
-
+const categories = [
+  {
+    name: "shoes",
+    value: "SHOES",
+  },
+  {
+    name: "watches",
+    value: "WATCHES",
+  },
+  {
+    name: "perfumes",
+    value: "PERFUMES",
+  },
+];
 function formatDate(date) {
   return date ? moment(date).format("MMMM Do YYYY, h:mm:ss a") : "Never";
 }
@@ -29,37 +42,37 @@ function formatCurrency(amount) {
     currency: "KES",
   }).format(amount);
 }
-const fetchAccount = async () => {
-  store.isAppwriteUser = true;
-  try {
-    AppwriteUser.value = await account.get();
-    // console.log(AppwriteUser.value);
-  } catch (e) {
-    console.log(e);
-    // store.isAppwriteUser = false;
-    // toast.add({
-    //   title: "Note",
-    //   description: e.message ? e.message : e,
-    // });
-  }
-};
+// const fetchAccount = async () => {
+//   store.isAppwriteUser = true;
+//   try {
+//     AppwriteUser.value = await account.get();
+//     // console.log(AppwriteUser.value);
+//   } catch (e) {
+//     console.log(e);
+//     // store.isAppwriteUser = false;
+//     // toast.add({
+//     //   title: "Note",
+//     //   description: e.message ? e.message : e,
+//     // });
+//   }
+// };
 
 onBeforeMount(() => {
-  fetchAccount();
+  // fetchAccount();
 });
 
 onMounted(async () => {
   /* check if user exist if exist dont call fetchAccount else call if not redirect  Login*/
 });
-watch([AppwriteUser, user], () => {
-  if (AppwriteUser.value !== null) {
-    navigateTo("/admin/ManageProducts");
-  } else if (user.value !== null) {
-    navigateTo("/admin/ManageProducts");
-  } else {
-    navigateTo("/");
-  }
-});
+// watch([AppwriteUser, user], () => {
+//   if (AppwriteUser.value !== null) {
+//     navigateTo("/admin/ManageProducts");
+//   } else if (user.value !== null) {
+//     navigateTo("/admin/ManageProducts");
+//   } else {
+//     navigateTo("/");
+//   }
+// });
 // });
 // definePageMeta({
 //   middleware: "auth",
@@ -126,14 +139,12 @@ const addProductToSupaBase = async () => {
   store.isSaving = true;
   console.log("store.productData", store.productData);
   const url = `https://acewears.onrender.com/product`;
-  const token =
-    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiRnJhbmNpcyBNd2FuaWtpIiwiaWQiOjcsImlhdCI6MTY4OTc4ODEzMywiZXhwIjoxNjg5ODc0NTMzfQ.qJc-8zo-M5sDQdHSVVV8yH4QlnnTjBqE0xPAh0wEQCc";
-
+  const token = localStorage.getItem("token");
   let newData = {
     title: store.productData.name,
     description: store.productData.desc,
     price: parseInt(store.productData.size),
-    categoryType: "SHOES",
+    categoryType: store.productData.category,
     category: "WATCHES",
     image: [{ url: store.productData.url }],
   };
@@ -287,7 +298,7 @@ const columns = [
   { sortable: true, key: "id", label: "id" },
   { sortable: true, key: "name", label: "Name" },
   { sortable: true, key: "price", label: "Price" },
-  { sortable: true, key: "created_at", label: "Date" },
+  { sortable: true, key: "categoryType", label: "category" },
   { key: "actions", label: "Actions" },
 ];
 const page = ref(1);
@@ -369,14 +380,12 @@ const editProductToSupaBase = async () => {
     return;
   }
   const url = `https://acewears.onrender.com/product/${store.productData.id}/`;
-  const token =
-    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiRnJhbmNpcyBNd2FuaWtpIiwiaWQiOjcsImlhdCI6MTY4OTc4ODEzMywiZXhwIjoxNjg5ODc0NTMzfQ.qJc-8zo-M5sDQdHSVVV8yH4QlnnTjBqE0xPAh0wEQCc";
-
+  const token = localStorage.getItem("token");
   let newData = {
     title: store.productData.name,
     description: store.productData.desc,
     price: parseInt(store.productData.size),
-    categoryType: "SHOES",
+    categoryType: store.productData.category,
     category: "WATCHES",
     image: [{ url: store.productData.url }],
   };
@@ -435,8 +444,7 @@ const handleView = (row) => {
 const deleteProductFromSupaBase = async (row) => {
   try {
     const url = `https://acewears.onrender.com/product/${row.id}/`;
-    const token =
-      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiRnJhbmNpcyBNd2FuaWtpIiwiaWQiOjcsImlhdCI6MTY4OTc4ODEzMywiZXhwIjoxNjg5ODc0NTMzfQ.qJc-8zo-M5sDQdHSVVV8yH4QlnnTjBqE0xPAh0wEQCc";
+    const token = localStorage.getItem("token");
 
     let resp = await fetch(url, {
       method: "DELETE",
@@ -526,24 +534,26 @@ fetchProducts();
             <Icon name="logos:google-tag-manager" class="h-40 w-40 text-white" />
           </div>
           <div class="flex justify-center space-x-4 items-center my-auto">
-            <UButton
-              class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg transition-colors duration-300 ease-in-out"
+            <button
+              class="inline-flex items-center focus:outline-none mr-4 bg-[#ff4e09] text-white py-2 px-4 rounded"
               @click="
                 analytics = true;
                 manageProducts = false;
                 isOpen = false;
               "
-              >Analytics</UButton
             >
-            <UButton
-              class="bg-[#ff4e09] hover:bg-[#ff4e09] text-white px-4 py-2 rounded-lg transition-colors duration-300 ease-in-out"
+              Analytics
+            </button>
+            <button
+              class="inline-flex items-center focus:outline-none mr-4 bg-[#ff4e09] text-white py-2 px-4 rounded"
               @click="
                 manageProducts = true;
                 analytics = false;
                 isOpen = false;
               "
-              >Manage Products</UButton
             >
+              Manage Products
+            </button>
           </div>
         </div>
         <!-- copyrights -->
@@ -589,6 +599,16 @@ fetchProducts();
                       required
                     />
                   </div>
+                  <!-- select categoryType  div-->
+                  <div class="mb-4 overflow-y-auto">
+                    <USelect
+                      v-model="store.productData.category"
+                      :options="categories"
+                      class="rounded px-3 py-2 w-full"
+                      option-attribute="name"
+                      placeholder="Select Category"
+                    />
+                  </div>
                   <div class="mb-4">
                     <label for="size" class="block text-white">Price:</label>
                     <UInput
@@ -632,40 +652,47 @@ fetchProducts();
                   <div
                     class="flex md:flex-row flex-col mx-auto justify-center gap-y-2 items-center md:justify-start w-full flex-1 max-w-xl gap-x-2"
                   >
-                    <UButton
+                    <button
                       v-if="!store.isEditing"
                       @click.prevent="addProductToSupaBase"
                       type="submit"
-                      class="text-white px-6 md:w-1/2 text-center py-3 w-full align-middle"
-                      color="orange"
-                      variant="solid"
+                      class="inline-flex items-center focus:outline-none mr-4 bg-[#ff4e09] text-white py-2 px-4 rounded"
                       :disabled="store.isSaving"
                       :loading="store.isSaving"
                     >
                       <p class="text-center">
-                        {{ store.isSaving ? "Save Changes" : "Add Product" }}
+                        <Icon
+                          name="eos-icons:bubble-loading"
+                          class="h-6 w-6"
+                          v-if="store.isSaving"
+                        />
+                        {{ store.isSaving ? "Saving." : "Add Product" }}
                       </p>
-                    </UButton>
-                    <UButton
+                    </button>
+                    <button
                       v-if="store.isEditing"
                       @click.prevent="editProductToSupaBase"
                       type="submit"
-                      class="text-white px-6 md:w-1/2 text-center py-3 w-full align-middle"
-                      color="orange"
-                      variant="solid"
+                      class="inline-flex items-center focus:outline-none mr-4 bg-[#ff4e09] text-white py-2 px-4 rounded"
                       :disabled="store.isLoading"
                       :loading="store.isLoading"
                     >
                       <p class="text-center">
-                        {{ store.isEditing ? "Editing" : "Edit product" }}
+                        <Icon
+                          name="eos-icons:bubble-loading"
+                          class="h-6 w-6"
+                          v-if="store.isLoading"
+                        />
+                        {{ store.isLoading ? "Editing" : "Edit product" }}
                       </p>
-                    </UButton>
-                    <UButton
+                    </button>
+                    <button
                       @click="store.showModal = false"
-                      variant="solid"
-                      class="px-4 md:w-1/2 w-full py-3"
-                      >Cancel</UButton
+                      class="inline-flex items-center focus:outline-none mr-4 bg-[#ff0909] text-white py-2 px-4 rounded"
+                      color="red"
                     >
+                      <span class="">Cancel</span>
+                    </button>
                   </div>
                 </form>
               </div>
@@ -676,19 +703,18 @@ fetchProducts();
                 class="mx-auto flex flex-row gap-x-4 md:gap-y-1 gap-y-3 space-x-2 flex-grow flex-wrap mb-2"
               >
                 <UInput v-model="q" placeholder="Filter products..." />
-                <UButton
-                  label="Add Product."
+                <button
                   @click="store.showModal = true"
-                  class="focus:bg-[#ff4e09]"
+                  class="inline-flex items-center focus:outline-none mr-4 bg-[#ff4e09] text-white py-2 px-4 rounded"
+                  color="orange"
                 >
                   <span>Add Product</span>
                   <ClientOnly><Icon name="ic:round-plus" class="h-6 w-6" /></ClientOnly>
-                </UButton>
-                <UButton
-                  label="Delete Product."
+                </button>
+                <button
                   @click="deleteSelectedProducts"
-                  :color="store.selected.length > 0 ? 'red' : 'orange'"
                   :disabled="store.isDeleting"
+                  class="inline-flex items-center focus:outline-none mr-4 bg-[#ff0d09] text-white py-2 px-4 rounded"
                   :loading="store.isDeleting"
                 >
                   <span class="">{{
@@ -700,7 +726,7 @@ fetchProducts();
                       name="ic:round-delete-forever"
                       class="w-6 h-6"
                   /></ClientOnly>
-                </UButton>
+                </button>
               </div>
               <div v-if="store.searching" class="overflow-x-auto px-7">
                 <div class="sm:-mx-6 lg:-mx-8">
@@ -848,7 +874,7 @@ fetchProducts();
         </div>
         <div class="flex justify-center items-center">
           <p class="text-gray-400 text-sm">
-            &copy; 2023 <span class="text-blue-500">AceShoes</span
+            &copy; 2023 <span class="text-blue-500">Acewears</span
             ><span class="text-orange-500">Technologies</span>
           </p>
         </div>
@@ -872,6 +898,8 @@ fetchProducts();
 * {
   scrollbar-width: thin;
   scrollbar-color: rgba(155, 155, 155, 0.5) transparent;
-  color: #ffffff;
+}
+::-webkit-scrollbar {
+  width: 5px;
 }
 </style>
