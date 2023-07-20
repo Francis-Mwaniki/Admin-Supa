@@ -590,7 +590,7 @@ fetchProducts();
               class="fixed inset-0 flex items-center justify-center bg-opacity-50 z-40"
             > -->
             <UModal v-model="store.showAddModal" v-if="store.showAddModal">
-              <div class="flex justify-end dark:bg-gray-950">
+              <div class="flex justify-end bg-gray-950">
                 <button
                   class="bg-[#ff4e09] font-medium p-2 md:p-4 text-white uppercase"
                   @click="store.showAddModal = false"
