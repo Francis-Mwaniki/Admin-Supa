@@ -15,19 +15,19 @@
           Close
         </button>
       </p>
-      <div class="bg-gray-950 p-4 rounded-lg shadow-lg flex py-5 my-auto flex-col">
+      <div class="p-4 rounded-lg shadow-lg flex py-5 my-auto flex-col">
         <NuxtImg
           :src="selectedProduct.image?.url"
           alt="Ace Shoe 2"
           class="w-full h-auto mb-4 rounded-lg"
         />
-        <h2 class="text-xl font-semibold mb-2 text-gray-200">
+        <h2 class="text-xl font-semibold mb-2">
           {{ selectedProduct.name }}
         </h2>
-        <p class="text-gray-200 mb-2">{{ selectedProduct.description }}</p>
+        <p class="mb-2">{{ selectedProduct.description }}</p>
         <div class="flex items-center justify-between">
-          <p class="text-gray-200 font-bold text-lg">{{ selectedProduct.price }}</p>
-          <!-- <p class="text-gray-200 font-bold text-lg">{{ selectedProduct.price }}</p> -->
+          <p class="font-bold text-lg">{{ selectedProduct.price }}</p>
+          <!-- <p class=" font-bold text-lg">{{ selectedProduct.price }}</p> -->
         </div>
       </div>
     </USlideover>

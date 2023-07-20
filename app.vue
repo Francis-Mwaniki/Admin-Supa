@@ -48,4 +48,7 @@ onMounted(() => {
 * {
   font-family: "Poppins", sans-serif;
 }
+input {
+  color: black;
+}
 </style>

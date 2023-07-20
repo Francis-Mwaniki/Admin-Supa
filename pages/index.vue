@@ -3,13 +3,15 @@
 <template>
   <!-- <div class="bg-opacity-60 bg-black relative" /> -->
   <div
-    class="flex justify-center items-center inset-0 h-full w-full fixed z-40 bg-gray-950 sm:min-h-screen min-w-full overflow-auto"
-    :class="{ 'pt-56 sm:pt-3': isRegister, 'pt-1 sm:pt-3': isLogin }"
+
+    class="flex justify-center items-center inset-0 h-full w-full fixed z-40 bg-gray-950 min-w-full overflow-auto"
+    :class="{ 'pt-64 pb-2 sm:pt-3': isRegister, 'pt-0 sm:pt-3': isLogin }"
+
   >
     <form
       v-if="isRegister"
       @submit.prevent="registerUser"
-      class="sm:w-1/3 p-8 bg-gray-900 rounded shadow-lg transition-all duration-500 transform w-full overflow-auto"
+      class="sm:w-1/2 p-8 bg-gray-900 rounded shadow-lg transition-all duration-500 transform w-full overflow-auto"
     >
       <h2 class="text-2xl mb-4">Register</h2>
       <!-- NAME -->
