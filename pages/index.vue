@@ -253,7 +253,10 @@ const loginUser = async () => {
           title: "Success",
           description: "User logged in successfully",
         });
-        router.push("/admin/ManageProducts");
+        setTimeout(()=>{
+          window.location.reload()
+          router.push("/admin/ManageProducts");
+        },100)
       } else {
         toast.add({
           timeout: 3000,
