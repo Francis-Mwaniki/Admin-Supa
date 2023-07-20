@@ -13,7 +13,7 @@
         />
       </div>
       <UModal v-model="editProfileModal" v-if="editProfileModal">
-        <div class="flex justify-end">
+        <div class="flex justify-end dark:bg-neutral-900">
           <button
             class="bg-[#ff4e09] font-medium p-2 md:p-4 text-white uppercase"
             @click="closeModal"
@@ -26,14 +26,14 @@
         </div>
       </UModal>
       <div
-        class="mx-auto w-32 h-32 relative -mt-16 border-4 border-white rounded-full overflow-hidden bg-black"
+        class="mx-auto w-32 h-32 relative -mt-16 border-4 border-white rounded-full overflow-hidden"
       >
         <div class="flex justify-center items-center h-full bg-black">
           <div class="text-6xl font-bold text-white" v-if="!userStore().isLoading">
             <!-- first letter of the name -->
             {{ user?.name.charAt(0) }}
           </div>
-          <div class="text-center mt-2 bg-black" v-if="userStore().isLoading">
+          <div class="text-center mt-2" v-if="userStore().isLoading">
             <Icon name="eos-icons:bubble-loading" class="h-9 w-9" />
           </div>
         </div>
