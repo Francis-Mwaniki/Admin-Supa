@@ -255,8 +255,8 @@ const loginUser = async () => {
         });
         setTimeout(()=>{
           window.location.reload()
-          router.push("/admin/ManageProducts");
         },100)
+         router.push("/admin/ManageProducts");
       } else {
         toast.add({
           timeout: 3000,
