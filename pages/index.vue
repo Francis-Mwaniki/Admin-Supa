@@ -6,7 +6,7 @@
     class="flex justify-center items-center inset-0 h-full w-full fixed z-40 bg-gray-950 min-w-full overflow-auto"
     :class="{ 'pt-64 pb-2 sm:pt-3': isRegister, 'pt-0 sm:pt-3': isLogin }"
   >
-    <UModal v-model="isRegister" v-if="isRegister">
+    <UModal v-model="showmode" v-if="showmode">
       <form
         v-if="isRegister"
         @submit.prevent="registerUser"
@@ -94,8 +94,6 @@
           </p>
         </div>
       </form>
-    </UModal>
-    <UModal v-model="isLogin" v-if="isLogin">
       <form
         v-if="isLogin"
         @submit.prevent="loginUser"
@@ -154,6 +152,7 @@ const isRegister = ref(true);
 const isLogin = ref(false);
 const name = ref("");
 const productKey = ref("");
+const showmode = ref(true);
 const email = ref("");
 const password = ref("");
 const phone = ref("");
