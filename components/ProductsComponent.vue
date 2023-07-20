@@ -680,7 +680,7 @@ fetchProducts();
             <!-- editting -->
 
             <UModal v-model="store.showModal" v-if="store.showModal">
-              <div class="flex justify-end dark:bg-gray-950">
+              <div class="flex justify-end bg-gray-950">
                 <button
                   class="bg-[#ff4e09] font-medium p-2 md:p-4 text-white uppercase"
                   @click="store.showModal = false"
