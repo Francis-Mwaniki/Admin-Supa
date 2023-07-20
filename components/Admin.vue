@@ -38,7 +38,7 @@ onMounted(() => {
   user.value = localStorage.getItem("user");
   // console.log("supabase user", user.value);
 
-  fetchAccount();
+  // fetchAccount();
 });
 const items = [
   [
