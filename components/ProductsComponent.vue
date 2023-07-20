@@ -192,7 +192,7 @@ const addProductToSupaBase = async () => {
 
     await fetchProducts();
     store.isSaving = false;
-    store.showModal = false;
+    store.showAddModal = false;
   }
 };
 /*    deleteSelectedProducts in supabase
@@ -276,6 +276,10 @@ const filteredRows = computed(() => {
     });
   });
 });
+const addProduct = () => {
+  store.productData = { id: null, url: "", name: "", size: "", desc: "" };
+  store.showAddModal = true;
+};
 watch(q, (value) => {
   console.log("value", value);
   if (value === "") {
@@ -511,6 +515,9 @@ const items = (row) => [
 const openModal = () => {
   store.showModal = true;
 };
+const openAddModal = () => {
+  store.showAddModal = true;
+};
 fetchProducts();
 </script>
 
@@ -582,13 +589,109 @@ fetchProducts();
               v-if="store.showModal"
               class="fixed inset-0 flex items-center justify-center bg-opacity-50 z-40"
             > -->
-            <UModal v-model="store.showModal" v-if="store.showModal">
+            <UModal v-model="store.showAddModal" v-if="store.showAddModal">
+              <div class="flex justify-end dark:bg-gray-950">
+                <button
+                  class="bg-[#ff4e09] font-medium p-2 md:p-4 text-white uppercase"
+                  @click="store.showAddModal = false"
+                >
+                  <Icon name="ic:sharp-close" class="h-9 w-9" />
+                </button>
+              </div>
               <div
                 class="z-20 rounded-lg p-8 max-w-2xl w-full overflow-y-auto bg-gray-950"
               >
-                <h2 class="text-2xl font-bold mb-4">
-                  {{ store.isEditing ? "Edit product" : "Add Product" }}
-                </h2>
+                <h2 class="text-2xl font-bold mb-4">Add Product</h2>
+                <form>
+                  <div class="mb-4 overflow-y-auto">
+                    <label for="name" class="block text-white">Name:</label>
+                    <UInput
+                      v-model="store.productData.name"
+                      type="text"
+                      id="name"
+                      class="rounded px-3 py-2 w-full"
+                      required
+                    />
+                  </div>
+                  <!-- select categoryType  div-->
+                  <div class="mb-4 overflow-y-auto">
+                    <USelect
+                      v-model="store.productData.category"
+                      :options="categories"
+                      class="rounded px-3 py-2 w-full"
+                      option-attribute="name"
+                      placeholder="Select Category"
+                    />
+                  </div>
+                  <div class="mb-4">
+                    <label for="size" class="block text-white">Price:</label>
+                    <UInput
+                      v-model="store.productData.size"
+                      type="number"
+                      id="size"
+                      class="rounded px-3 py-2 w-full"
+                      required
+                    />
+                  </div>
+                  <div class="mb-4 mt-2">
+                    <label for="File" class="block text-white">Select File:</label>
+                    <!-- if not during edit please add another -->
+
+                    <CloudUpload @uploaded="handleUrl" />
+                  </div>
+
+                  <div class="mb-4 mt-2">
+                    <label for="desc" class="block text-white">Description:</label>
+                    <UTextarea
+                      v-model="store.productData.desc"
+                      type="desc"
+                      id="desc"
+                      rows="3"
+                      class="rounded px-3 py-2 w-full"
+                      required
+                    />
+                  </div>
+
+                  <div
+                    class="flex md:flex-row flex-col mx-auto justify-center gap-y-2 items-center md:justify-start w-full flex-1 max-w-xl gap-x-2"
+                  >
+                    <button
+                      v-if="!store.isEditing"
+                      @click.prevent="addProductToSupaBase"
+                      type="submit"
+                      class="inline-flex items-center focus:outline-none mr-4 bg-[#ff4e09] text-white py-2 px-4 rounded"
+                      :disabled="store.isSaving"
+                      :loading="store.isSaving"
+                    >
+                      <p class="text-center">
+                        <Icon
+                          name="eos-icons:bubble-loading"
+                          class="h-6 w-6"
+                          v-if="store.isSaving"
+                        />
+                        {{ store.isSaving ? "Saving." : "Add Product" }}
+                      </p>
+                    </button>
+                  </div>
+                </form>
+              </div>
+            </UModal>
+
+            <!-- editting -->
+
+            <UModal v-model="store.showModal" v-if="store.showModal">
+              <div class="flex justify-end dark:bg-gray-950">
+                <button
+                  class="bg-[#ff4e09] font-medium p-2 md:p-4 text-white uppercase"
+                  @click="store.showModal = false"
+                >
+                  <Icon name="ic:sharp-close" class="h-9 w-9" />
+                </button>
+              </div>
+              <div
+                class="z-20 rounded-lg p-8 max-w-2xl w-full overflow-y-auto bg-gray-950"
+              >
+                <h2 class="text-2xl font-bold mb-4">Edit product</h2>
                 <form>
                   <div class="mb-4 overflow-y-auto">
                     <label for="name" class="block text-white">Name:</label>
@@ -654,23 +757,6 @@ fetchProducts();
                     class="flex md:flex-row flex-col mx-auto justify-center gap-y-2 items-center md:justify-start w-full flex-1 max-w-xl gap-x-2"
                   >
                     <button
-                      v-if="!store.isEditing"
-                      @click.prevent="addProductToSupaBase"
-                      type="submit"
-                      class="inline-flex items-center focus:outline-none mr-4 bg-[#ff4e09] text-white py-2 px-4 rounded"
-                      :disabled="store.isSaving"
-                      :loading="store.isSaving"
-                    >
-                      <p class="text-center">
-                        <Icon
-                          name="eos-icons:bubble-loading"
-                          class="h-6 w-6"
-                          v-if="store.isSaving"
-                        />
-                        {{ store.isSaving ? "Saving." : "Add Product" }}
-                      </p>
-                    </button>
-                    <button
                       v-if="store.isEditing"
                       @click.prevent="editProductToSupaBase"
                       type="submit"
@@ -687,13 +773,6 @@ fetchProducts();
                         {{ store.isLoading ? "Editing" : "Edit product" }}
                       </p>
                     </button>
-                    <button
-                      @click="store.showModal = false"
-                      class="inline-flex items-center focus:outline-none mr-4 bg-[#ff0909] text-white py-2 px-4 rounded"
-                      color="red"
-                    >
-                      <span class="">Cancel</span>
-                    </button>
                   </div>
                 </form>
               </div>
@@ -705,7 +784,7 @@ fetchProducts();
               >
                 <UInput v-model="q" placeholder="Filter products..." />
                 <button
-                  @click="store.showModal = true"
+                  @click="addProduct()"
                   class="inline-flex items-center focus:outline-none mr-4 bg-[#ff4e09] text-white py-2 px-4 rounded"
                   color="orange"
                 >
