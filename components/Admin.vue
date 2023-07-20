@@ -1,7 +1,7 @@
 <script setup>
 import { userStore } from "@/store/user.js";
 
-const user = useSupabaseUser();
+const user = ref("");
 const AppwriteUser = useAppwrite();
 const currentAppwriteUser = ref("");
 const router = useRouter();
@@ -11,7 +11,7 @@ const toast = useToast();
 const store = userStore();
 
 const EditUser = async () => {
-  store.showResetModal = true;
+  router.push("/admin/Settings");
 };
 const fetchAccount = async () => {
   store.isAppwriteUser = true;
@@ -26,8 +26,17 @@ const fetchAccount = async () => {
     });
   }
 };
+const deleteUser = async () => {
+  try {
+    localStorage.removeItem("token");
+    router.push("/");
+  } catch (error) {
+    console.log(error);
+  }
+};
 onMounted(() => {
-  console.log("supabase user", user.value);
+  user.value = localStorage.getItem("user");
+  // console.log("supabase user", user.value);
 
   fetchAccount();
 });
@@ -39,22 +48,22 @@ const items = [
         src: "https://avatars.githubusercontent.com/u/739984?v=4",
       },
       click: () => {
-        router.push("/profile");
+        router.push("/admin/Settings");
       },
     },
     {
       label: user.value ? user.value.email : "No email",
       icon: "i-heroicons-user-20-solid",
       click: () => {
-        router.push("/profile");
+        router.push("/admin/Settings");
       },
     },
     {
-      label: store.currentAdmin ? store.currentAdmin : "No phone",
+      label: user.value ? user.value.phone : "No phone",
 
       icon: "i-heroicons-user-20-solid",
       click: () => {
-        router.push("/profile");
+        router.push("/admin/Settings");
       },
     },
   ],
@@ -77,7 +86,7 @@ const items = [
       shortcuts: ["⌘", "D"],
       click: () => {
         /* emit toggle */
-        auth.auth.signOut();
+        deleteUser();
         toast.add({
           title: "Success",
           description: "Logged out successfully",
@@ -85,7 +94,7 @@ const items = [
           duration: 5000,
           isClosable: true,
         });
-        router.push("/Login");
+        router.push("/");
       },
     },
   ],

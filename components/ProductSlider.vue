@@ -3,13 +3,17 @@
 <template>
   <!-- UButton to store.isViewProduct = false -->
 
-  <div @click="store.isViewProduct = false">
-    <USlideover v-model="store.isViewProduct">
+  <div @click="store.isViewProduct = false" class="overflow-auto">
+    <USlideover v-model="store.isViewProduct" class="md:max-w-xl mx-auto overflow-auto">
       <p class="flex justify-start items-start p-5">
-        <UButton color="green" variant="solid" @click="store.isViewProduct = false">
+        <button
+          class="inline-flex items-center focus:outline-none mr-4 bg-[#f40808] text-white py-2 px-4 rounded"
+          variant="solid"
+          @click="store.isViewProduct = false"
+        >
           <Icon name="ic:round-close" class="mr-2" />
           Close
-        </UButton>
+        </button>
       </p>
       <div class="bg-gray-950 p-4 rounded-lg shadow-lg flex py-5 my-auto flex-col">
         <NuxtImg

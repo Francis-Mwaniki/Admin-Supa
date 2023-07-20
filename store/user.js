@@ -18,7 +18,7 @@ import { defineStore } from "pinia";
     const showResetModal = ref(false);
     const isEditing = ref(false);
     const isSaving = ref(false);
-    const productData = ref({ id: null, url: "", name: "", size: "", desc: "" });
+    const productData = ref({ id: null, url: "", name: "", size: "", desc: "", category:'SHOES'});
     const searching = ref(false);
 
     
