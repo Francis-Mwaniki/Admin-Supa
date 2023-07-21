@@ -188,7 +188,7 @@ const registerUser = async () => {
     phone: phone.value,
   };
   try {
-    const url = "https://acewears.onrender.com/auth/signup/ADMIN";
+    const url = "https://acewears-app-production.up.railway.app/auth/signup/ADMIN";
     const response = await fetch(url, {
       method: "POST",
       headers: {
@@ -233,7 +233,7 @@ const loginUser = async () => {
     password: password.value,
   };
   try {
-    const url = "https://acewears.onrender.com/auth/signin/";
+    const url = "https://acewears-app-production.up.railway.app/auth/signin/";
     const response = await fetch(url, {
       method: "POST",
       headers: {

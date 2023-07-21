@@ -140,7 +140,7 @@ const fetchUser = async () => {
   userStore().isLoading = true;
   const token = localStorage.getItem("token");
 
-  const url = "https://acewears.onrender.com/auth/me";
+  const url = "https://acewears-app-production.up.railway.app/auth/me";
 
   //"http://localhost:5000/auth/me"
   try {
