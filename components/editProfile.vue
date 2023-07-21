@@ -131,7 +131,7 @@ const goTo = (path) => {
 const fetchUser = async () => {
   const token = localStorage.getItem("token");
 
-  let url = "https://acewears.onrender.com/auth/me";
+  let url = "https://acewears-app-production.up.railway.app/auth/me";
 
   //"http://localhost:5000/auth/me"
   try {
