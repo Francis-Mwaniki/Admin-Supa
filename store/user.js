@@ -1,28 +1,27 @@
 import { defineStore } from "pinia";
 
- /* using vue3 */
- export const userStore = defineStore('userStore', () => {
-    const user=useSupabaseUser() 
-    const product = ref([]);
-    const isAdding = ref(false);
-    const signInWithPhone=ref(false);
-    const isViewProduct=ref(false);
-    const isLoading = ref(false);
-    const currentAdmin=ref("");
-    const resetting = ref(false);
-    const isAppwriteUser = ref(false);
-    const showModal = ref(false);
-    const isUpdating = ref(false);
-    const notification = ref([]);
-    const selected = ref([]);
-    const isDeleting = ref(false);
-    const showResetModal = ref(false);
-    const isEditing = ref(false);
-    const isSaving = ref(false);
-    const productData = ref({ id: null, url: "", name: "", size: "", desc: "", category:'SHOES'});
-    const searching = ref(false);
-
-    
-  
-    return { user,currentAdmin,isViewProduct, product,resetting, notification, isAppwriteUser,signInWithPhone, isUpdating, isAdding, isLoading, showModal, selected, isDeleting, showResetModal, isEditing, isSaving, productData, searching }
-  })
+export const userStore = defineStore({
+  id: 'userStore',
+  state: () => ({
+    user: useSupabaseUser(),
+    product: [],
+    isAdding: false,
+    signInWithPhone: false,
+    isViewProduct: false,
+    isLoading: false,
+    currentAdmin: "",
+    resetting: false,
+    isAppwriteUser: false,
+    showModal: false,
+    isUpdating: false,
+    notification: [],
+    selected: [],
+    isDeleting: false,
+    showResetModal: false,
+    isEditing: false,
+    isSaving: false,
+    productData: { id: null, url: "", name: "", size: "", desc: "", category: 'SHOES' },
+    searching: false,
+  }),
+  persist: true,
+});

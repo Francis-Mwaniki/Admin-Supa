@@ -438,8 +438,8 @@ const handleView = (row) => {
 };
 const deleteProductFromSupaBase = async (row) => {
   try {
-    // const url = `https://acewears-app-production.up.railway.app/product/${row.id}/`;
-    const url = `http://localhost:3000/product/${row.id}/`;
+    const url = `https://acewears-app-production.up.railway.app/product/${row.id}/`;
+    // const url = `http://localhost:3000/product/${row.id}/`;
     const token = localStorage.getItem("token");
 
     let resp = await fetch(url, {

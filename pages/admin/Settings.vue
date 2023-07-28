@@ -113,6 +113,7 @@
 import { ref } from "vue";
 import { userStore } from "~/store/user";
 const editProfileModal = ref(false);
+const router = useRouter();
 import moment from "moment";
 const user = ref(null);
 const openModal = () => (editProfileModal.value = true);

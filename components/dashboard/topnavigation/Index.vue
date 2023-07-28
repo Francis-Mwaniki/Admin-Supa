@@ -69,7 +69,7 @@
               />
             </svg>
           </a>
-          <a href="#" class="block pr-5">
+          <a href="#" class="block pr-5 scroll-m-1">
             <!-- notification -->
             <UPopover>
               <div class="relative">
@@ -82,24 +82,24 @@
                 </div>
               </div>
 
-              <template #panel>
-                <div class="w-80">
+              <template #panel class="overflow-auto">
+                <div class="w-80 overflow-auto overflow-y-auto">
                   <div
-                    class="flex items-center justify-between px-4 py-3 border-b border-gray-200"
+                    class="flex items-center justify-between px-4 py-3 mb-1 border-gray-200"
                   >
                     <h3 class="text-lg font-medium text-gray-900 dark:text-white">
                       Notifications
                     </h3>
                   </div>
-                  <ul class="divide-y divide-gray-200">
-                    <li class="px-2 py-4 hover:bg-gray-800">
+                  <ul class="divide-y divide-gray-200 overflow-auto sticky">
+                    <li class="px-2 py-4 hover:bg-gray-900 overflow-y-auto">
                       <a
                         href="#"
-                        class="flex items-center justify-start space-x-1 flex-col gap-2"
+                        class="flex items-center justify-start space-x-1 flex-col gap-2 overflow-auto"
                       >
                         <!-- if no notification -->
                         <div v-if="!store.notification.length">
-                          <div class="border-b-4 border-gray-500">
+                          <div class=" ">
                             <p class="text-sm font-medium text-blue-600">
                               No new notification
                             </p>
@@ -109,13 +109,14 @@
                         <!-- v-for store.notification -->
 
                         <div
-                          v-for="notification in store.notification"
+                          v-for="notification in store.notification.slice(0, 3).reverse()"
                           :key="notification.id"
-                          class="divide-y divide-gray-200 flex items-center justify-start space-x-4 flex-col gap-2"
+                          class="divide-y divide-gray-200 flex items-center justify-start space-x-4 flex-col gap-2 hover:bg-gray-800 p-2 overflow-auto"
                         >
-                          <div class="border-b-4 border-gray-500">
+                          <div class="border-b mb-2 border-gray-600">
                             <p class="text-sm font-medium text-blue-600">
-                              {{ notification?.title || "No title" }}
+                              {{ notification?.title || "No title" }} -
+                              {{ new Date().toLocaleDateString() }}
                             </p>
                             <p class="text-sm text-white">
                               {{ notification.data }}
@@ -170,31 +171,9 @@ export default {
   name: "TopNavigation",
   inject: ["toggle"],
   setup() {
-    const socket = io("http://localhost:3000/", {
-      transports: ["websocket", "polling", "flashsocket"],
-    });
-
     const store = userStore();
     const notificationCount = computed(() => store.notification.length) || 0;
 
-    onMounted(() => {
-      socket.on("connect", () => {
-        console.log("connected");
-      });
-      socket.on("order-create", (desc) => {
-        store.notification.push(desc);
-        console.log("desc", desc);
-      });
-
-      socket.on("order-update", (desc) => {
-        console.log("desc", desc);
-
-        store.notification.push(desc);
-      });
-      socket.on("disconnect", () => {
-        console.log("disconnected");
-      });
-    });
     const clearAll = () => {
       store.notification = [];
     };

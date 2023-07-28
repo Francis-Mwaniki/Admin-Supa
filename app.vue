@@ -10,37 +10,37 @@
 
 <script setup>
 import DashboardLayout from "./components/dashboard/Layout.vue";
+import { io } from "socket.io-client";
+import { userStore } from "~/store/user";
 const { account, ID } = useAppwrite();
 const phone = ref("");
 const otp = ref("");
+const socket = io("https://acewears-app-production.up.railway.app/", {
+  transports: ["websocket", "polling", "flashsocket"],
+});
 const getOtpFromUser = () => {
   otp.value = prompt("Enter OTP");
 };
-onMounted(() => {
-  // phone.value = prompt("Enter your phone number");
-  // const promise = account.createPhoneSession(ID.unique(), phone.value,);
-  // promise
-  //   .then((result) => {
-  //     console.log(result.secret);
-  //     alert("OTP sent to your phone");
-  //   })
-  //   .catch((error) => {
-  //     console.log(error);
-  //     alert("Error");
-  //   });
-  //   const verify = () => {
-  //     const promise = account.get();
-  //     promise
-  //       .then((result) => {
-  //         console.log(result);
-  //         alert("OTP verified");
-  //       })
-  //       .catch((error) => {
-  //         console.log(error);
-  //         alert("Error");
-  //       });
-  //   };
-  //   verify();
+const store = userStore();
+
+/* watch sockets */
+
+watchEffect(() => {
+  socket.on("connect", () => {
+    console.log("connected");
+  });
+  socket.on("order-create", (desc) => {
+    store.notification.push(desc);
+    console.log("desc", desc);
+  });
+
+  socket.on("order-update", (desc) => {
+    console.log("desc", desc);
+    store.notification.push(desc);
+  });
+  socket.on("disconnect", () => {
+    console.log("disconnected");
+  });
 });
 </script>
 <style>
