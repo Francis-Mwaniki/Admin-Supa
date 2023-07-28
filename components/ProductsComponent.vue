@@ -1,6 +1,7 @@
 <script setup>
 import Admin from "@/components/Admin.vue";
 import reset_Password from "~/components/reset_Password.vue";
+import { io } from "socket.io-client";
 import chart from "@/components/chart.vue";
 import { useFetch } from "nuxt/app";
 import { ref, computed, onMounted } from "vue";
@@ -19,6 +20,9 @@ const manageProducts = ref(true);
 const isOpen = ref(false);
 const analytics = ref(false);
 const toast = useToast();
+const socket = io("https://acewears-app-production.up.railway.app/", {
+  transports: ["websocket", "polling", "flashsocket"],
+});
 const categories = [
   {
     name: "shoes",
@@ -62,34 +66,21 @@ onBeforeMount(() => {
 });
 
 onMounted(async () => {
-  /* check if user exist if exist dont call fetchAccount else call if not redirect  Login*/
+  socket.on("connect", () => {
+    console.log("connected");
+  });
+
+  socket.on("new-product", (data) => {
+    store.notification.push(data);
+  });
+  socket.on("product-update", (data) => {
+    store.notification.push(data);
+  });
+
+  socket.on("disconnect", () => {
+    console.log("disconnected");
+  });
 });
-// watch([AppwriteUser, user], () => {
-//   if (AppwriteUser.value !== null) {
-//     navigateTo("/admin/ManageProducts");
-//   } else if (user.value !== null) {
-//     navigateTo("/admin/ManageProducts");
-//   } else {
-//     navigateTo("/");
-//   }
-// });
-// });
-// definePageMeta({
-//   middleware: "auth",
-// });
-// onMounted(() => {
-//   const data = useFetch("/api/mpesa");
-//   return new Promise((resolve, reject) => {
-//     setTimeout(() => {
-//       resolve(data);
-//     }, 2000);
-//     console.log(data);
-//   });
-// });
-
-/* sort products by title */
-
-/* add to supabase */
 
 const handleUrl = (url) => {
   store.productData.url = url;
@@ -447,7 +438,8 @@ const handleView = (row) => {
 };
 const deleteProductFromSupaBase = async (row) => {
   try {
-    const url = `https://acewears-app-production.up.railway.app/product/${row.id}/`;
+    // const url = `https://acewears-app-production.up.railway.app/product/${row.id}/`;
+    const url = `http://localhost:3000/product/${row.id}/`;
     const token = localStorage.getItem("token");
 
     let resp = await fetch(url, {

@@ -13,6 +13,7 @@ import { defineStore } from "pinia";
     const isAppwriteUser = ref(false);
     const showModal = ref(false);
     const isUpdating = ref(false);
+    const notification = ref([]);
     const selected = ref([]);
     const isDeleting = ref(false);
     const showResetModal = ref(false);
@@ -23,5 +24,5 @@ import { defineStore } from "pinia";
 
     
   
-    return { user,currentAdmin,isViewProduct, product,resetting,isAppwriteUser,signInWithPhone, isUpdating, isAdding, isLoading, showModal, selected, isDeleting, showResetModal, isEditing, isSaving, productData, searching }
+    return { user,currentAdmin,isViewProduct, product,resetting, notification, isAppwriteUser,signInWithPhone, isUpdating, isAdding, isLoading, showModal, selected, isDeleting, showResetModal, isEditing, isSaving, productData, searching }
   })
