@@ -1,26 +1,13 @@
 <script setup>
-import { userStore } from "~/store/user";
-import { io } from "socket.io-client";
+import { useUserStore } from "~/store/user";
 const router = useRouter();
 const isProcessing = ref(false);
-const resultDesc = ref(null);
-const store = userStore();
+const userStore = useUserStore();
 const transaction = ref([]);
-const singleTransaction = ref([]);
+let singleTransaction = reactive(null);
 const token = ref(null);
-const toast = useToast();
-const user = ref(null);
-const socket = io("https://acewears.up.railway.app/", {
-  transports: ["websocket", "polling", "flashsocket"],
-});
-onMounted(async () => {
-  socket.on("connect", () => {
-    console.log("connected");
-  });
 
-  socket.on("disconnect", () => {
-    console.log("disconnected");
-  });
+onMounted(async () => {
   /*
     let completed = data.completed;
         let order_id = data.id;
@@ -43,16 +30,14 @@ onMounted(async () => {
 
 
   */
-  token.value = localStorage.getItem("token");
-  user.value = localStorage.getItem("user");
-  JSON.parse(user.value);
+
+  setTimeout(() => (userStore.isLoading = false), 1000);
 });
 
 const fetchOrders = async () => {
   console.log("token", token.value);
-
   try {
-    // const url = `http://localhost:3000/orders/admin-all-orders`;
+    // const url = `http://localhost:3000/orders`;
     const url = "https://acewears.up.railway.app/orders";
     const response = await fetch(url, {
       method: "GET",
@@ -88,35 +73,35 @@ const fetchOrders = async () => {
       //   transaction.value = [...transaction.value, wholeProduct];
       // });
       data.forEach((data) => {
-        let status = resultDesc.value ? resultDesc.value : "pending";
+        let completed = data.completed;
         let order_id = data.id;
-        let productTitle = data?.product?.title;
-        let amount = data?.product?.price;
-        let user_id = data?.user?.id;
-        let name = data?.user?.name;
-        let phone = data?.user?.phone;
+        // let productTitle = data.
+        let amount = data?.total;
+        let paymentMethod = data?.payment_method;
+        let paymentStatus = data?.payment_status;
+        let quantity = data?.quantity;
+        // let name = data?.user?.name;
+        // let phone = data?.user?.phone;
         let createdAt = data?.createdAt;
-        let type = "mpesa";
         let wholeProduct = {
-          status,
+          completed,
           order_id,
-          productTitle,
           amount,
-          name,
-          user_id,
-          phone,
-          type,
+          paymentMethod,
+          paymentStatus,
+          quantity,
           createdAt,
         };
-
-        transaction.value.push(wholeProduct);
+        console.log("wholeProduct", wholeProduct);
+        transaction.value = [...transaction.value, wholeProduct];
+        console.log("transaction", transaction.value);
       });
       // transaction.value = [...transaction.value, wholeProduct];
 
       // transaction.value = [...transaction.value, wholeProduct];
 
       console.log("Success:", data);
-      console.log("transaction", transaction.value);
+      // transaction.value.push(data);
     } else {
       useToast().add({
         title: "Error",
@@ -139,9 +124,8 @@ const fetchOrders = async () => {
   }
 };
 onBeforeMount(async () => {
-  singleTransaction.value = null;
+  singleTransaction = null;
   token.value = localStorage.getItem("token");
-  user.value = localStorage.getItem("user");
   if (!token.value) {
     router.push("/Login");
   }
@@ -159,11 +143,11 @@ const columns = [
   // {  sortable: true, key: "image", label: "Image" },
   { sortable: true, key: "order_id", label: "id" },
   { sortable: true, key: "amount", label: "amount" },
-  { sortable: true, key: "phone", label: "phone" },
-  { sortable: true, key: "name", label: "name" },
-  // { sortable: true, key: "status", label: "status" },
-  { sortable: true, key: "status", label: "status" },
-  { sortable: true, key: "type", label: "Type" },
+  { sortable: true, key: "quantity", label: "quantity" },
+  { sortable: true, key: "paymentMethod", label: "method" },
+  { sortable: true, key: "paymentStatus", label: "status" },
+  { sortable: true, key: "completed", label: "iscomplete" },
+  // { sortable: true, key: "type", label: "Type" },
   { sortable: true, key: "createdAt", label: "Date" },
   { key: "actions", label: "Actions" },
 ];
@@ -175,8 +159,8 @@ const items = (row) => [
       icon: "i-heroicons-eye-20-solid",
       click: () => {
         isProcessing.value = true;
-        store.viewOrders = true;
-        singleTransaction.value = row;
+        userStore.viewOrders = true;
+        singleTransaction = row;
       },
     },
   ],
@@ -187,8 +171,9 @@ const items = (row) => [
       icon: "i-heroicons-trash-20-solid",
       click: () => {
         isProcessing.value = true;
-        store.deleteOrder = true;
-        singleTransaction.value = row;
+        userStore.deleteOrder = true;
+        singleTransaction = row;
+        console.log("singleTransaction", singleTransaction);
       },
     },
   ],
@@ -203,7 +188,6 @@ const selected = ref([]);
       <!-- YOUR ODERS AND TRAN -->
       <h1 class="text-3xl font-semibold text-gray-800 dark:text-gray-100">Orders</h1>
       <p class="text-gray-600 dark:text-gray-400">Your orders and transactions</p>
-      <!-- want see all your transactions here -->
 
       <h2
         class="text-3xl font-semibold text-gray-800 dark:text-gray-100 text-center my-4"
@@ -228,13 +212,13 @@ const selected = ref([]);
       </UTable>
 
       <!-- paypal -->
-      <!-- <div v-if="store.viewOrders">
+      <!-- <div v-if="userStore.viewOrders">
         <UModal v-model="isProcessing">
           <OdersDetails :singleTransaction="singleTransaction" />
-    
+
         </UModal>
       </div>
-      <div v-if="store.deleteOrder">
+      <div v-if="userStore.deleteOrder">
         <UModal v-model="isProcessing">
           <DeleteOrder :singleTransaction="singleTransaction" />
   

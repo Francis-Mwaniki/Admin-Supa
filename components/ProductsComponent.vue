@@ -3,6 +3,7 @@ import Admin from "@/components/Admin.vue";
 import reset_Password from "~/components/reset_Password.vue";
 import { io } from "socket.io-client";
 import chart from "@/components/chart.vue";
+
 import { useFetch } from "nuxt/app";
 import { ref, computed, onMounted } from "vue";
 const client = useSupabaseClient();
@@ -19,7 +20,9 @@ const store = userStore();
 const manageProducts = ref(true);
 const isOpen = ref(false);
 const analytics = ref(false);
+const err = ref("");
 const toast = useToast();
+const token = ref("");
 const socket = io("https://acewears.up.railway.app/", {
   transports: ["websocket", "polling", "flashsocket"],
 });
@@ -66,6 +69,10 @@ onBeforeMount(() => {
 });
 
 onMounted(async () => {
+  token.value = localStorage.getItem("token");
+  if (!token.value) {
+    err.value = "Please login to continue";
+  }
   socket.on("connect", () => {
     console.log("connected");
   });

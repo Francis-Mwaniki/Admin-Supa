@@ -24,6 +24,7 @@ const getOtpFromUser = () => {
 const store = userStore();
 
 /* watch sockets */
+onMounted(() => {});
 
 watchEffect(() => {
   socket.on("connect", () => {

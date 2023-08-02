@@ -38,7 +38,7 @@ onMounted(() => {
   user.value = localStorage.getItem("user");
   // console.log("supabase user", user.value);
 
-//  fetchAccount();
+  //  fetchAccount();
 });
 const items = [
   [
@@ -94,7 +94,7 @@ const items = [
           duration: 5000,
           isClosable: true,
         });
-        router.push("/");
+        router.push("/Login");
       },
     },
   ],

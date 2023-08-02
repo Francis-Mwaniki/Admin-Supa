@@ -4,7 +4,6 @@
 export default defineNuxtConfig({
   devtools: { enabled: true },
   modules: ['@nuxthq/ui',
-  '@nuxtjs/partytown',
   '@nuxt/image',
   "nuxt-appwrite",
   // 'nuxt-delay-hydration',
@@ -26,9 +25,7 @@ appwrite: {
 //   // enables nuxt-delay-hydration in dev mode for testing
 //   debug: process.env.NODE_ENV === 'development'
 // },
-partytown: {
- 
-},
+
   cloudinary: {
     cloudName: 'dzvtkbjhc',
   
