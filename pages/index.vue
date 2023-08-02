@@ -3,14 +3,10 @@
 <template>
   <!-- <div class="bg-opacity-60 bg-black relative" /> -->
   <div
-
     class="flex justify-center items-center inset-0 h-full w-full fixed z-40 bg-gray-950 min-w-full overflow-auto"
     :class="{ 'pt-64 pb-2 sm:pt-3': isRegister, 'pt-0 sm:pt-3': isLogin }"
-
   >
-
     <UModal v-model="showmode" v-if="showmode">
-
       <form
         v-if="isRegister"
         @submit.prevent="registerUser"
@@ -77,7 +73,6 @@
           />
         </div>
 
-
         <div class="flex">
           <button
             type="submit"
@@ -107,7 +102,6 @@
         <h2 class="text-2xl mb-4">Login</h2>
         <!-- NAME -->
 
-
         <div class="mb-4">
           <label for="email" class="block mb-2 text-white">Email</label>
           <input
@@ -126,7 +120,6 @@
             class="w-full border px-4 py-2 rounded dark:text-white dark:bg-gray-800"
           />
         </div>
-
 
         <div class="flex">
           <button
@@ -188,7 +181,7 @@ const registerUser = async () => {
     phone: phone.value,
   };
   try {
-    const url = "https://acewears-app-production.up.railway.app/auth/signup/ADMIN";
+    const url = "https://acewears.up.railway.app/auth/signup/ADMIN";
     const response = await fetch(url, {
       method: "POST",
       headers: {
@@ -233,7 +226,7 @@ const loginUser = async () => {
     password: password.value,
   };
   try {
-    const url = "https://acewears-app-production.up.railway.app/auth/signin/";
+    const url = "https://acewears.up.railway.app/auth/signin/";
     const response = await fetch(url, {
       method: "POST",
       headers: {
@@ -253,10 +246,10 @@ const loginUser = async () => {
           title: "Success",
           description: "User logged in successfully",
         });
-        setTimeout(()=>{
-          window.location.reload()
-        },100)
-         router.push("/admin/ManageProducts");
+        setTimeout(() => {
+          window.location.reload();
+        }, 100);
+        router.push("/admin/ManageProducts");
       } else {
         toast.add({
           timeout: 3000,

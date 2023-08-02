@@ -10,7 +10,7 @@ const singleTransaction = ref([]);
 const token = ref(null);
 const toast = useToast();
 const user = ref(null);
-const socket = io("https://acewears-app-production.up.railway.app/", {
+const socket = io("https://acewears.up.railway.app/", {
   transports: ["websocket", "polling", "flashsocket"],
 });
 onMounted(async () => {
@@ -53,7 +53,7 @@ const fetchOrders = async () => {
 
   try {
     // const url = `http://localhost:3000/orders/admin-all-orders`;
-    const url = "https://acewears-app-production.up.railway.app/orders";
+    const url = "https://acewears.up.railway.app/orders";
     const response = await fetch(url, {
       method: "GET",
       headers: {

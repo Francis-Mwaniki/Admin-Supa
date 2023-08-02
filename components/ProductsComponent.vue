@@ -20,7 +20,7 @@ const manageProducts = ref(true);
 const isOpen = ref(false);
 const analytics = ref(false);
 const toast = useToast();
-const socket = io("https://acewears-app-production.up.railway.app/", {
+const socket = io("https://acewears.up.railway.app/", {
   transports: ["websocket", "polling", "flashsocket"],
 });
 const categories = [
@@ -129,7 +129,7 @@ const addProductToSupaBase = async () => {
   }
   store.isSaving = true;
   console.log("store.productData", store.productData);
-  const url = `https://acewears-app-production.up.railway.app/product`;
+  const url = `https://acewears.up.railway.app/product`;
   const token = localStorage.getItem("token");
   let newData = {
     title: store.productData.name,
@@ -299,7 +299,7 @@ const columns = [
 const page = ref(1);
 const pageCount = 5;
 const fetchProducts = async () => {
-  const url = "https://acewears-app-production.up.railway.app/product/";
+  const url = "https://acewears.up.railway.app/product/";
   //.range(page, pageCount);
   try {
     let resp = await fetch(url, {
@@ -374,7 +374,7 @@ const editProductToSupaBase = async () => {
     });
     return;
   }
-  const url = `https://acewears-app-production.up.railway.app/product/${store.productData.id}/`;
+  const url = `https://acewears.up.railway.app/product/${store.productData.id}/`;
   const token = localStorage.getItem("token");
   let newData = {
     title: store.productData.name,
@@ -438,7 +438,7 @@ const handleView = (row) => {
 };
 const deleteProductFromSupaBase = async (row) => {
   try {
-    const url = `https://acewears-app-production.up.railway.app/product/${row.id}/`;
+    const url = `https://acewears.up.railway.app/product/${row.id}/`;
     // const url = `http://localhost:3000/product/${row.id}/`;
     const token = localStorage.getItem("token");
 

@@ -15,7 +15,7 @@ import { userStore } from "~/store/user";
 const { account, ID } = useAppwrite();
 const phone = ref("");
 const otp = ref("");
-const socket = io("https://acewears-app-production.up.railway.app/", {
+const socket = io("https://acewears.up.railway.app/", {
   transports: ["websocket", "polling", "flashsocket"],
 });
 const getOtpFromUser = () => {
