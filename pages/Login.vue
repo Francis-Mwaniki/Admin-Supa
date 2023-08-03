@@ -2,11 +2,9 @@
 
 <template>
   <div class="bg-black">
-    <div
-      class="flex justify-center items-center inset-0 h-full w-full bg-gray-950 min-w-full overflow-auto fixed z-50"
-    >
+    <div class="flex justify-center items-center h-screen">
       <!--  :class="{ 'pt-64 pb-2 sm:pt-3': isRegister, 'pt-0 sm:pt-3': isLogin }" -->
-      <UModal v-model="showmode" v-if="showmode">
+      <UModal v-model="showmode" @close="$router.push('/')">
         <form
           @submit.prevent="loginUser"
           class="sm:w-full p-8 bg-gray-900 rounded shadow-lg transition-all duration-500 transform w-full overflow-auto"
@@ -48,12 +46,9 @@
           <div class="flex justify-end">
             <p class="text-gray-400">
               Don't have an account?
-              <span
-                class="text-blue-500 cursor-pointer"
-                @click="$router.push('/Register')"
-              >
+              <NuxtLink to="/Register" class="text-blue-500 cursor-pointer">
                 Register
-              </span>
+              </NuxtLink>
             </p>
           </div>
         </form>
@@ -66,26 +61,12 @@
 import { ref, computed } from "vue";
 const isRegister = ref(true);
 const isLogin = ref(false);
-const name = ref("");
-const productKey = ref("");
 const showmode = ref(true);
 const email = ref("");
 const password = ref("");
-const phone = ref("");
-const confirmPassword = ref("");
-const isRegistering = ref(false);
 const toast = useToast();
 const isLogging = ref(false);
 const router = useRouter();
-const goTo = (page) => {
-  if (page === "Register") {
-    isRegister.value = true;
-    isLogin.value = false;
-  } else {
-    isRegister.value = false;
-    isLogin.value = true;
-  }
-};
 
 const loginUser = async () => {
   isLogging.value = true;
@@ -144,22 +125,6 @@ const loginUser = async () => {
     isLogging.value = false;
   }
 };
-
-// onBeforeMount(() => {
-//   const token = localStorage.getItem("token");
-//   if (token) {
-//     router.push("/admin/ManageProducts");
-//   }
-// });
-/* watch  token */
-// watch(
-//   () => localStorage.getItem("token"),
-//   (token) => {
-//     if (token) {
-//       router.push("/admin/ManageProducts");
-//     }
-//   }
-// );
 </script>
 
 <style scoped>

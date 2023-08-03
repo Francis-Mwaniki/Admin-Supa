@@ -8,6 +8,7 @@ export const userStore = defineStore({
     isAdding: false,
     signInWithPhone: false,
     isViewProduct: false,
+    users: [],
     isLoading: false,
     currentAdmin: "",
     resetting: false,
@@ -15,6 +16,7 @@ export const userStore = defineStore({
     showModal: false,
     isUpdating: false,
     notification: [],
+    orders:[],
     selected: [],
     isDeleting: false,
     showResetModal: false,
@@ -23,5 +25,5 @@ export const userStore = defineStore({
     productData: { id: null, url: "", name: "", size: "", desc: "", category: 'SHOES' },
     searching: false,
   }),
-  persist: true,
+
 });

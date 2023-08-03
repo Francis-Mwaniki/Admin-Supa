@@ -2,9 +2,8 @@
 
 <template>
   <div class="flex justify-center items-center h-screen">
-    <UModal v-model="showmode" v-if="showmode">
+    <UModal v-model="showmode" @close="$router.push('/Login')">
       <form
-        v-if="isRegister"
         @submit.prevent="registerUser"
         class="sm:w-full p-8 bg-gray-900 rounded shadow-lg transition-all duration-500 transform w-full overflow-auto"
       >
@@ -84,9 +83,7 @@
         <div class="flex justify-end">
           <p class="text-gray-400">
             Already have an account?
-            <span class="text-blue-500 cursor-pointer" @click="$router.push('/Login')">
-              Login
-            </span>
+            <NuxtLink to="/Login" class="text-blue-500 cursor-pointer"> Login </NuxtLink>
           </p>
         </div>
       </form>
@@ -96,8 +93,6 @@
 
 <script setup>
 import { ref, computed } from "vue";
-const isRegister = ref(true);
-const isLogin = ref(false);
 const name = ref("");
 const productKey = ref("");
 const showmode = ref(true);
@@ -178,38 +173,6 @@ const registerUser = async () => {
 </script>
 
 <style scoped>
-.modal {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 9999;
-}
-
-.modal-overlay {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0, 0, 0, 0.5);
-}
-
-.modal-container {
-  background-color: white;
-  padding: 2rem;
-  border-radius: 0.5rem;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-}
-
-.modal-content {
-  max-width: 400px;
-  margin: 0 auto;
-}
 .slide-enter-active,
 .slide-leave-active {
   transition: transform 0.5s, opacity 0.5s;

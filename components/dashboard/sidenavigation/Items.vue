@@ -4,7 +4,7 @@
       <home-icon />
     </sidenav-item>
 
-    <sidenav-item title="Status" to="/admin/status">
+    <sidenav-item title="Orders" to="/admin/status">
       <status-icon />
     </sidenav-item>
 
@@ -12,7 +12,7 @@
       <archives-icon />
     </sidenav-item>
 
-    <sidenav-item title="Credits" to="/admin/credits">
+    <sidenav-item title="Users" to="/admin/credits">
       <credits-icon />
     </sidenav-item>
 

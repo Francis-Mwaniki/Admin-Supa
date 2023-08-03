@@ -1,13 +1,7 @@
 <template>
-  <Content title="Archives" />
+  <div>Coming Soon</div>
 </template>
 
 <script>
-import Content from '../../components/Content.vue';
-
-export default {
-  components: {
-    Content,
-  },
-};
+export default {};
 </script>

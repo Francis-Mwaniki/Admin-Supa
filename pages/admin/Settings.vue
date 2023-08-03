@@ -1,6 +1,12 @@
 <template>
   <div>
     <!-- https://gist.github.com/goodreds/5b8a4a2bf11ff67557d38c5e727ea86c -->
+    <button
+      class="bg-[#ff4e09] hover:shadow-lg font-semibold text-white px-6 py-2 sm:text-base md:text-base lg:text-base xl:text-base text-sm flex justify-center items-center mx-auto"
+      @click="addAdmin = true"
+    >
+      Add Another Admin
+    </button>
 
     <div
       class="max-w-2xl mx-4 sm:max-w-sm md:max-w-sm lg:max-w-sm xl:max-w-sm sm:mx-auto md:mx-auto lg:mx-auto xl:mx-auto mt-16 bg-white shadow-xl rounded-lg text-gray-900 dark:dark:bg-neutral-900 dark:text-white"
@@ -107,6 +113,73 @@
       </div>
     </div>
   </div>
+
+  <!-- Add User -->
+
+  <!-- Add another user by productkey Umodal-->
+
+  <div class="">
+    <UModal v-model="addAdmin">
+      <div class="flex justify-end">
+        <button
+          class="bg-[#ff4e09] font-medium p-2 md:p-4 text-white uppercase"
+          @click="addAdmin = false"
+        >
+          <Icon name="ic:sharp-close" class="h-9 w-9" />
+        </button>
+      </div>
+
+      <!-- v-if productKey copy -->
+      <!-- <div class="flex justify-center items-center mx-auto" v-if="productKey">
+        <h2 class="font-semibold text-xl text-center pt-3">Your product key is</h2>
+        <div class="flex justify-center items-center mx-auto">
+          <p class="text-2xl font-semibold text-center">{{ productKey }}</p>
+
+          <button
+            class="bg-[#ff4e09] font-medium p-2 md:p-4 text-white uppercase"
+            @click="copyProductKey"
+          >
+            <Icon name="ic:sharp-content-copy" class="h-9 w-9" />
+          </button>
+        </div>
+      </div> -->
+
+      <h2 class="font-semibold text-xl text-center pt-3">Add another Admin</h2>
+
+      <div class="flex py-4 px-2">
+        <div
+          class="w-1/2 flex justify-center flex-col items-center mx-auto gap-y-3 py-2 px-1"
+        >
+          <label class="block text-sm font-medium text-gray-700">
+            Enter the email of the admin
+          </label>
+          <UInput
+            type="text"
+            v-model="adminEmail"
+            class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
+            placeholder="Enter the email of the admin"
+          />
+
+          <!-- Submit  -->
+          <div class="flex justify-center">
+            <button
+              class="bg-[#ff4e09] font-medium p-2 md:px-4 md:py-2 text-white uppercase text-sm"
+              @click="GenerateProductKey()"
+            >
+              <span v-if="!gen">
+                <Icon name="ic:sharp-check" class="h-7 w-7" />
+                Generate Key
+              </span>
+              <span v-else>
+                <Icon name="eos-icons:loading" class="h-7 w-7" />
+                Generating
+              </span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </UModal>
+  </div>
 </template>
 
 <script setup>
@@ -114,24 +187,79 @@ import { ref } from "vue";
 import { userStore } from "~/store/user";
 const editProfileModal = ref(false);
 const router = useRouter();
+
 import moment from "moment";
 const user = ref(null);
 const openModal = () => (editProfileModal.value = true);
 const closeModal = () => (editProfileModal.value = false);
-
-/* let url = 'http://localhost:5000/auth/me';
-
-let options = {
-  method: 'GET',
-  headers: {
-    Authorization: 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiQnV5ZXIiLCJpZCI6MiwiaWF0IjoxNjg5MjMwMzY4LCJleHAiOjE2ODkzMTY3Njh9.uxEiw0Q7VRYYj4idn8S-ywLxaZA-WPggGANZta2pu9c'
+const addAdmin = ref(false);
+const toast = useToast();
+const adminEmail = ref("");
+let productKey = ref("");
+const gen = ref(false);
+const copyProductKey = () => {
+  navigator.clipboard.writeText(productKey.value);
+  toast.add({
+    title: "Copied",
+    description: "Product key copied to clipboard",
+    status: "success",
+    duration: 9000,
+    isClosable: true,
+  });
+};
+const GenerateProductKey = async () => {
+  gen.value = true;
+  const token = localStorage.getItem("token");
+  const url = "https://acewears.up.railway.app/auth/key";
+  //"http://localhost:5000/auth/addAdmin"
+  try {
+    const response = await fetch(url, {
+      method: "POST",
+      headers: {
+        Authorization: "Bearer " + token,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        email: adminEmail.value,
+        userType: "ADMIN",
+      }),
+    });
+    if (response.ok) {
+      console.log("response ok", response);
+      productKey.value = "poiugfdyuiugfdrty8909ugvs3wdf";
+      addAdmin.value = false;
+      adminEmail.value = "";
+      toast.add({
+        title: "Success",
+        description: "copy the product key and send it to the admin",
+        status: "success",
+        timeout: 0,
+        isClosable: true,
+        actions: [
+          {
+            label: "Copy",
+            click: () => {
+              GenerateProductKey();
+            },
+          },
+        ],
+      });
+      gen.value = false;
+    } else {
+      gen.value = false;
+      toast.add({
+        title: "Error",
+        description: data.message,
+        status: "error",
+        duration: 9000,
+        isClosable: true,
+      });
+    }
+  } catch (error) {
+    gen.value = false;
+    console.log(error);
   }
 };
-
-fetch(url, options)
-  .then(res => res.json())
-  .then(json => console.log(json))
-  .catch(err => console.error('error:' + err)); */
 
 const goTo = (path) => {
   router.push(path);
