@@ -90,8 +90,11 @@ onMounted(async () => {
 });
 
 const handleUrl = (url) => {
+  
   store.productData.url = url;
-  console.log("url", url);
+  console.log("url", store.productData.url);
+
+
 };
 const addProductToSupaBase = async () => {
   if (store.productData.url === "") {
@@ -144,7 +147,7 @@ const addProductToSupaBase = async () => {
     price: parseInt(store.productData.size),
     categoryType: store.productData.category,
     category: "WATCHES",
-    image: [{ url: store.productData.url }],
+    image: [{ url: store.productData.url[0]}],
   };
   let resp = await fetch(url, {
     method: "POST",
@@ -586,6 +589,7 @@ fetchProducts();
             <reset_Password />
           </div>
           <div class="" v-if="!store.showResetModal">
+            <div class="flex justify-end items-end py-2"><TopNav /></div>
             <div class="flex justify-end items-end py-2"><Admin /></div>
             <!-- <div
               v-if="store.showModal"

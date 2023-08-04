@@ -11,7 +11,7 @@ const toast = useToast();
 const store = userStore();
 
 const EditUser = async () => {
-  router.push("/admin/Settings");
+  router.push("/Settings");
 };
 const fetchAccount = async () => {
   store.isAppwriteUser = true;
@@ -48,14 +48,14 @@ const items = [
         src: "https://avatars.githubusercontent.com/u/739984?v=4",
       },
       click: () => {
-        router.push("/admin/Settings");
+        router.push("/Settings");
       },
     },
     {
       label: user.value ? user.value.email : "No email",
       icon: "i-heroicons-user-20-solid",
       click: () => {
-        router.push("/admin/Settings");
+        router.push("/Settings");
       },
     },
     {
@@ -63,7 +63,7 @@ const items = [
 
       icon: "i-heroicons-user-20-solid",
       click: () => {
-        router.push("/admin/Settings");
+        router.push("/Settings");
       },
     },
   ],
@@ -102,6 +102,7 @@ const items = [
 </script>
 
 <template>
+
   <UDropdown :items="items" :popper="{ placement: 'bottom-start' }">
     <UButton
       color="white"

@@ -1,5 +1,5 @@
 <template>
-    <UContainer>
+    <UContainer class=" py-3">
     <Menu />
       <NuxtPage />
     </UContainer>

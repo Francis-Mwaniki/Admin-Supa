@@ -11,6 +11,7 @@ export const userStore = defineStore({
     users: [],
     viewOrders: false,
     deleteOrder: false,
+    images:[],
     isLoading: false,
     currentAdmin: "",
     resetting: false,
@@ -24,7 +25,7 @@ export const userStore = defineStore({
     showResetModal: false,
     isEditing: false,
     isSaving: false,
-    productData: { id: null, url: "", name: "", size: "", desc: "", category: 'SHOES' },
+    productData: { id: null, url: [], name: "", size: "", desc: "", category: 'SHOES' },
     searching: false,
   }),
 
