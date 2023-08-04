@@ -9,6 +9,8 @@ export const userStore = defineStore({
     signInWithPhone: false,
     isViewProduct: false,
     users: [],
+    viewOrders: false,
+    deleteOrder: false,
     isLoading: false,
     currentAdmin: "",
     resetting: false,

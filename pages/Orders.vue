@@ -320,9 +320,9 @@ const selectedOrder = ref([]);
       </span>
     </div>
     <!-- paypal -->
-    <!-- <div v-if="store.viewOrders">
+    <div v-if="store.viewOrders">
         <UModal v-model="isProcessing">
-          <OdersDetails :singleTransaction="singleTransaction" />
+          <OrderDetails :singleTransaction="singleTransaction" />
 
         </UModal>
       </div>
@@ -331,6 +331,6 @@ const selectedOrder = ref([]);
           <DeleteOrder :singleTransaction="singleTransaction" />
   
         </UModal>
-      </div> -->
+      </div>
   </div>
 </template>

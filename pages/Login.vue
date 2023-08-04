@@ -7,9 +7,9 @@
       <UModal v-model="showmode" @close="$router.push('/')">
         <form
           @submit.prevent="loginUser"
-          class="sm:w-full p-8 bg-gray-900 rounded shadow-lg transition-all duration-500 transform w-full overflow-auto"
+          class="sm:w-full p-8 bg-gray-900 rounded shadow-lg transition-all duration-500 transform w-full overflow-auto sm:h-full h-screen"
         >
-          <h2 class="text-2xl mb-4">Login</h2>
+          <h2 class="text-2xl mb-4 text-white">Login</h2>
           <!-- NAME -->
 
           <div class="mb-4">

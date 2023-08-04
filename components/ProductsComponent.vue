@@ -802,7 +802,7 @@ fetchProducts();
                   <span>Add Product</span>
                   <ClientOnly><Icon name="ic:round-plus" class="h-6 w-6" /></ClientOnly>
                 </button>
-                <button
+                <!-- <button
                   @click="deleteSelectedProducts"
                   :disabled="store.isDeleting"
                   class="inline-flex items-center focus:outline-none mr-4 bg-[#ff0d09] text-white py-2 px-4 rounded"
@@ -817,7 +817,7 @@ fetchProducts();
                       name="ic:round-delete-forever"
                       class="w-6 h-6"
                   /></ClientOnly>
-                </button>
+                </button> -->
               </div>
               <div v-if="store.searching" class="overflow-x-auto px-7">
                 <div class="sm:-mx-6 lg:-mx-8">

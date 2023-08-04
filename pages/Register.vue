@@ -7,7 +7,7 @@
         @submit.prevent="registerUser"
         class="sm:w-full p-8 bg-gray-900 rounded shadow-lg transition-all duration-500 transform w-full overflow-auto"
       >
-        <h2 class="text-2xl mb-4">Hi, Register as an Admin</h2>
+        <h2 class="text-2xl mb-4 text-white">Register as Admin</h2>
         <!-- NAME -->
         <div class="mb-4">
           <label for="name" class="block mb-2 text-white">Name</label>
