@@ -1,7 +1,7 @@
 <template>
   <!-- go to login -->
   <div class="bg-black">
-    <UModal v-model="gotoLoginOrSignUp" @close="redirect">
+    
       <div class="flex justify-end">
         <button
           class="bg-[#ff4e09] font-medium p-2 md:p-4 text-white uppercase"
@@ -50,7 +50,6 @@
           </div>
         </div>
       </div>
-    </UModal>
   </div>
 
   <!-- login -->

@@ -20,7 +20,7 @@
                   </div>
                   <input
                     type="text"
-                    class="w-11/12 focus:outline-none focus:text-gray-600 p-2 dark:focus:text-white"
+                    class="w-11/12 outline-none text-gray-600 p-2 dark:text-white"
                     v-model="user.name"
                   />
                 </div>
@@ -35,7 +35,7 @@
                     <input
                       type="text"
                       v-model="user.phone"
-                      class="w-11/12 focus:outline-none focus:text-gray-600 p-2 dark:focus:text-white"
+                      class="w-11/12 outline-none text-gray-600 p-2 dark:text-white"
                     />
                   </div>
                 </div>
@@ -50,7 +50,7 @@
                     <input
                       type="password"
                       v-model="user.password"
-                      class="w-11/12 focus:outline-none focus:text-gray-600 p-2 dark:focus:text-white"
+                      class="w-11/12 outline-none text-gray-600 p-2 dark:text-white"
                     />
                   </div>
                   <div class="w-full inline-flex border-b my-2">
@@ -60,13 +60,13 @@
                     <input
                       type="password"
                       v-model="user.password"
-                      class="w-11/12 focus:outline-none focus:text-gray-600 dark:focus:text-white p-2"
+                      class="w-11/12 outline-none text-gray-600 dark:text-white p-2"
                     />
                   </div>
                 </div>
 
                 <button
-                  class="inline-flex items-center focus:outline-none mr-4 mt-6 bg-[#ff4e09] text-white py-2 px-4 rounded"
+                  class="inline-flex items-center outline-none mr-4 mt-6 bg-[#ff4e09] text-white py-2 px-4 rounded"
                 >
                   <Icon name="ic:sharp-update" class="w-4 mr-2" />
                   update
@@ -80,7 +80,7 @@
           <div class="w-full p-4 text-right text-gray-500">
             <button
               @click="deleteUser"
-              class="inline-flex items-center focus:outline-none mr-4 bg-[#ff4e09] text-white py-2 px-4 rounded"
+              class="inline-flex items-center outline-none mr-4 bg-[#ff4e09] text-white py-2 px-4 rounded"
             >
               <svg fill="none" class="w-4 mr-2" viewBox="0 0 24 24" stroke="currentColor">
                 <path

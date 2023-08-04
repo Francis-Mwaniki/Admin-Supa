@@ -1,15 +1,14 @@
 <template>
-  <dashboard-layout>
     <UContainer>
+    <Menu />
       <NuxtPage />
     </UContainer>
 
     <UNotifications />
-  </dashboard-layout>
 </template>
 
 <script setup>
-import DashboardLayout from "./components/dashboard/Layout.vue";
+import Menu from "~/components/Menu.vue";
 import { io } from "socket.io-client";
 import { userStore } from "~/store/user";
 const { account, ID } = useAppwrite();

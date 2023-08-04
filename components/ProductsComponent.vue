@@ -537,7 +537,10 @@ fetchProducts();
         <!-- switch between Analytics and Admin menu-->
         <div class="py-4 flex gap-y-9 flex-col">
           <div class="flex justify-center space-x-4 items-center mx-auto">
-            <Icon name="logos:google-tag-manager" class="h-40 w-40 text-white" />
+            <ClientOnly>
+                 <Icon name="logos:google-tag-manager" class="h-40 w-40 text-white" /> 
+              </ClientOnly>
+          
           </div>
           <div class="flex justify-center space-x-4 items-center my-auto">
             <button
@@ -594,7 +597,10 @@ fetchProducts();
                   class="bg-[#ff4e09] font-medium p-2 md:p-4 text-white uppercase"
                   @click="store.showAddModal = false"
                 >
-                  <Icon name="ic:sharp-close" class="h-9 w-9" />
+                <ClientOnly>
+                     <Icon name="ic:sharp-close" class="h-9 w-9" />
+              </ClientOnly>
+             
                 </button>
               </div>
               <div
@@ -663,11 +669,14 @@ fetchProducts();
                       :loading="store.isSaving"
                     >
                       <p class="text-center">
-                        <Icon
+                    
+                        <ClientOnly>
+                    <Icon
                           name="eos-icons:bubble-loading"
                           class="h-6 w-6"
                           v-if="store.isSaving"
                         />
+              </ClientOnly>
                         {{ store.isSaving ? "Saving." : "Add Product" }}
                       </p>
                     </button>
@@ -684,7 +693,10 @@ fetchProducts();
                   class="bg-[#ff4e09] font-medium p-2 md:p-4 text-white uppercase"
                   @click="store.showModal = false"
                 >
-                  <Icon name="ic:sharp-close" class="h-9 w-9" />
+                <ClientOnly>
+                    <Icon name="ic:sharp-close" class="h-9 w-9" />
+                </ClientOnly>
+              
                 </button>
               </div>
               <div

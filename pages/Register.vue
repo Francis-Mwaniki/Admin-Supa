@@ -134,6 +134,9 @@ const registerUser = async () => {
       });
       isRegistering.value = false;
       isLogging.value = true;
+      setTimeout(() => {
+        router.push("/Login");
+      }, 3000);
     } else {
       const error = await response.json();
       toast.add({
