@@ -146,7 +146,7 @@
   
         <h2 class="font-semibold text-xl text-center pt-3">Add another Admin</h2>
   
-        <div class="flex py-4 px-2">
+        <div class="flex py-4 px-2 sm:h-full h-screen">
           <div
             class="w-1/2 flex justify-center flex-col items-center mx-auto gap-y-3 py-2 px-1"
           >
@@ -242,31 +242,25 @@ watch(token, (value) => {
         }),
       });
       if (response.ok) {
-        console.log("response ok", response);
-        productKey.value = "poiugfdyuiugfdrty8909ugvs3wdf";
+        const data = await response.json();
+        productKey.value = data.key
+        console.log("data", data)
         addAdmin.value = false;
         adminEmail.value = "";
         toast.add({
           title: "Success",
-          description: "copy the product key and send it to the admin",
+          description: "product was sent to the admin's email",
           status: "success",
           timeout: 0,
           isClosable: true,
-          actions: [
-            {
-              label: "Copy",
-              click: () => {
-                GenerateProductKey();
-              },
-            },
-          ],
+         
         });
         gen.value = false;
       } else {
         gen.value = false;
         toast.add({
           title: "Error",
-          description: data.message,
+          description: "Something went wrong",
           status: "error",
           duration: 9000,
           isClosable: true,

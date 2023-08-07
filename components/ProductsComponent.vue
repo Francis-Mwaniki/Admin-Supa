@@ -141,14 +141,15 @@ const addProductToSupaBase = async () => {
   console.log("store.productData", store.productData);
   const url = `https://acewears.up.railway.app/product`;
   const token = localStorage.getItem("token");
+  const imageUrls = store.productData.url.map(url => ({ url }))
   let newData = {
-    title: store.productData.name,
-    description: store.productData.desc,
-    price: parseInt(store.productData.size),
-    categoryType: store.productData.category,
-    category: "WATCHES",
-    image: [{ url: store.productData.url[0]}],
-  };
+  title: store.productData.name,
+  description: store.productData.desc,
+  price: parseInt(store.productData.size),
+  categoryType: store.productData.category,
+  category: "WATCHES",
+  image: imageUrls,
+};
   let resp = await fetch(url, {
     method: "POST",
     headers: {
@@ -339,19 +340,30 @@ const fetchProducts = async () => {
       console.log("data", data);
     }
   } catch (error) {
+    console.log("err from fetching", error);
     // toast.add({
     //   title: "Huh!",
-    //   description: "Check you internet please!",
+    //   description: "Check your Internet! or try again later",
     //   status: "error",
     //   duration: 5000,
     //   isClosable: true,
     // });
-    console.log(error);
   }
 };
 
 const rows = computed(() => {
-  return store.product.slice((page.value - 1) * pageCount, page.value * pageCount);
+  try {
+    if(store.product.length !== 0){
+    return store.product.slice((page.value - 1) * pageCount, page.value * pageCount);
+  }
+
+  } catch (error) {
+    console.log("err from fetching", error);
+    
+    
+    
+  }
+
 });
 const handleEdit = (row) => {
   let product = {
@@ -665,7 +677,7 @@ fetchProducts();
                     class="flex md:flex-row flex-col mx-auto justify-center gap-y-2 items-center md:justify-start w-full flex-1 max-w-xl gap-x-2"
                   >
                     <button
-                      v-if="!store.isEditing"
+                  
                       @click.prevent="addProductToSupaBase"
                       type="submit"
                       class="inline-flex items-center focus:outline-none mr-4 bg-[#ff4e09] text-white py-2 px-4 rounded"

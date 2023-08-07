@@ -12,7 +12,9 @@
               class=" hidden"
               @change="handleFileSelect"
             />
-            <a href="#"  class="mr-2 w-full py-2 my-3 px-5  m-2 text-white rounded-md" @click="selectFiles">Upload multiple or 1 file</a>
+            <a href="#"  class="mr-2 w-full py-2 my-3 px-5  m-2 text-white rounded-md" @click="selectFiles" v-if="!isUploading">Upload multiple or 1 file</a>
+            <Icon name="line-md:loading-loop" class="mr-2 h-7 w-7" v-if="isUploading" />
+            
           </div>
         </div>
       </div>
@@ -60,6 +62,7 @@ export default {
       cloudName: "dzvtkbjhc",
       unsignedUploadPreset: "c5gngmqw",
       uploadProgress: 0,
+      isUploading: false,
       fetchedUrl: "",
       imagePreviews: [],
       imagePreviewsUrls: [],
@@ -94,17 +97,18 @@ export default {
           let splitImage = image.split(",");
           let firstPart = splitImage[0];
           let secondPart = splitImage[1];
-          console.log("firstPart:", firstPart, "secondPart:", secondPart);
+          // console.log("firstPart:", firstPart, "secondPart:", secondPart);
           this.imagePreviewsUrls.push(secondPart);
           // this.imagePreviewsUrls.push(e.target.result);
 
-          this.imagePreviews = [...this.imagePreviewsUrls]; // Corrected line
+          // this.imagePreviews = [...this.imagePreviewsUrls]; // Corrected line
         };
         reader.readAsDataURL(files[i]);
       }
     
   },
     uploadFile(file) {
+      this.isUploading = true;
       const url = `https://api.cloudinary.com/v1_1/${this.cloudName}/upload`;
       const fd = new FormData();
 
@@ -140,9 +144,11 @@ export default {
           this.$emit("uploaded", this.images);
           // console.log("Fetched URL:", this.fetchedUrl);
           console.log("Fetched URL:", this.images);
+          this.isUploading = false;
         })
         .catch((error) => {
-          console.log("Error uploading file to Cloudinary:", error);
+          this.isUploading = false;
+        alert("Upload failed");
         });
     },
   },
